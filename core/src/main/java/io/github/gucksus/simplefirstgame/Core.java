@@ -22,6 +22,11 @@ public class Core extends ApplicationAdapter {
     }
 
     @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+    }
+
+    @Override
     public void render() {
         ScreenUtils.clear(Color.BLACK);
         batch.begin();
