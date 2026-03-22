@@ -19,7 +19,17 @@ public class Core extends ApplicationAdapter {
 
     @Override
     public void create() {
+        backgroundTexture = new Texture("background.png");
+        shipTexture = new Texture("ShipSprite.png");
+
+        shipSprite = new Sprite(shipTexture);
+        shipSprite.setSize(1, 1);
+        backgroundSprite = new Sprite(backgroundTexture);
+        backgroundSprite.setSize(8, 22);
+
+
         batch = new SpriteBatch();
+        viewport = new FitViewport(8,11);
     }
 
     @Override
