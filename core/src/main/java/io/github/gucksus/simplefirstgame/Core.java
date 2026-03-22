@@ -10,10 +10,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Core extends ApplicationAdapter {
-    Texture background;
+    Texture backgroundTexture;
     Texture shipTexture;
     private SpriteBatch batch;
     Sprite shipSprite;
+    Sprite backgroundSprite;
     FitViewport viewport;
 
     @Override
