@@ -24,7 +24,6 @@ public class Core extends ApplicationAdapter {
     Texture backgroundTextureNo2;
     // Entities textures.
     Texture shipTexture;
-    Texture bulletlv1Texture;
     // Sprites.
     private SpriteBatch batch;
     Sprite shipSprite;
@@ -49,7 +48,6 @@ public class Core extends ApplicationAdapter {
         backgroundTextureNo1 = new Texture("background2.png");
         backgroundTextureNo2 = new Texture("background3.png");
         shipTexture = new Texture("ShipSprite.png");
-        bulletlv1Texture = new Texture("bullet_texture.png");
 
         // Initialize sprites.
         shipSprite = new Sprite(shipTexture);
@@ -140,7 +138,7 @@ public class Core extends ApplicationAdapter {
         if (bulletTimer >= fireRate) { // If the timer exceeds the time interval, it will spawn a bullet and resets back to 0.
             float iniX = shipSprite.getX() + shipSprite.getWidth() / 2;
             float iniY = shipSprite.getY() + shipSprite.getHeight();
-            bulletlv1Array.add(new Bulletlv1(bulletlv1Texture, iniX, iniY));
+            bulletlv1Array.add(new Bulletlv1(iniX, iniY));
             bulletTimer = 0;
         }
     }

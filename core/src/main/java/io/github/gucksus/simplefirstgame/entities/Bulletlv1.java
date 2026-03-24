@@ -7,9 +7,11 @@ public class Bulletlv1 {
     final float speed = 5f;
 //    final float damage = 1;
     public Sprite bulletSelfSprite;
+    Texture bulletlv1Texture;
 
-    public Bulletlv1(Texture texture, float iniX, float iniY) {
-        bulletSelfSprite = new Sprite(texture);
+    public Bulletlv1(float iniX, float iniY) {
+        bulletlv1Texture = new Texture("bullet_texture.png");
+        bulletSelfSprite = new Sprite(bulletlv1Texture);
         bulletSelfSprite.setSize(.5f, .5f);
         bulletSelfSprite.setCenterX(iniX);
         bulletSelfSprite.setY(iniY);
