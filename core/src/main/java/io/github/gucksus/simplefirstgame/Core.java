@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -24,6 +25,7 @@ public class Core extends ApplicationAdapter {
     Texture backgroundTextureNo2;
     // Entities textures.
     Texture shipTexture;
+    Rectangle shipHitbox;
     // Sprites.
     private SpriteBatch batch;
     Sprite shipSprite;
@@ -51,6 +53,7 @@ public class Core extends ApplicationAdapter {
 
         // Initialize sprites.
         shipSprite = new Sprite(shipTexture);
+        shipHitbox = new Rectangle(4, 0, 1, 1);
         shipSprite.setSize(1, 1);
         shipSprite.setCenterX(4);
         backgroundSprites[0] = new Sprite(backgroundTextureNo0);
@@ -108,6 +111,8 @@ public class Core extends ApplicationAdapter {
         if (Gdx.input.isKeyPressed(Input.Keys.J)) {
             bulletSpawn();
         }
+
+        shipHitbox.setPosition(shipSprite.getX(), shipSprite.getY());
     }
 
     private void backgroundUpdate(float delta) {
@@ -163,6 +168,10 @@ public class Core extends ApplicationAdapter {
         shipSprite.setY(MathUtils.clamp(shipSprite.getY(), 0, worldHeight - shipSprite.getHeight()));
     }
 
+    private void drawHitbox(Rectangle hitbox) {
+        shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+    }
+
     private void draw() {
         // Clear the screen and get ready for the next frame.
         ScreenUtils.clear(Color.BLACK);
@@ -181,7 +190,7 @@ public class Core extends ApplicationAdapter {
         loneEnemylv1.selfSprite.draw(batch);
 
         for (Bulletlv1 bulletlv1: bulletlv1Array) {
-            bulletlv1.bulletSelfSprite.draw(batch);
+            bulletlv1.selfSprite.draw(batch);
         }
 
         batch.end();
@@ -189,7 +198,11 @@ public class Core extends ApplicationAdapter {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         shapeRenderer.setColor(Color.GREEN);
-        shapeRenderer.rect(loneEnemylv1.hitbox.x, loneEnemylv1.hitbox.y, loneEnemylv1.hitbox.width, loneEnemylv1.hitbox.height);
+        drawHitbox(loneEnemylv1.hitbox);
+        drawHitbox(shipHitbox);
+        for (Bulletlv1 bullet: bulletlv1Array){
+            drawHitbox(bullet.hitbox);
+        }
 
         shapeRenderer.end();
 
