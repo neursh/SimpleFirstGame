@@ -25,7 +25,6 @@ public class Core extends ApplicationAdapter {
     // Entities textures.
     Texture shipTexture;
     Texture bulletlv1Texture;
-    Texture enemyLv1Texture;
     // Sprites.
     private SpriteBatch batch;
     Sprite shipSprite;
@@ -51,7 +50,6 @@ public class Core extends ApplicationAdapter {
         backgroundTextureNo2 = new Texture("background3.png");
         shipTexture = new Texture("ShipSprite.png");
         bulletlv1Texture = new Texture("bullet_texture.png");
-        enemyLv1Texture = new Texture("enemylv1.png");
 
         // Initialize sprites.
         shipSprite = new Sprite(shipTexture);
