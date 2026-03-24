@@ -18,6 +18,10 @@ public class Enemylv1 {
     public Rectangle hurtbox;
     float width = 1;
     float height = 1;
+    float hitboxOffsetX = width / 32 * 7;
+    float hitboxOffsetY = height / 32 * 8;
+    float hurtboxOffsetX = width / 32 * 3;
+    float hurtboxOffsetY = height / 32 * 7;
 
     public Enemylv1(float iniX, float iniY) {
         enemyLv1Texture = new Texture("enemylv1.png");
@@ -25,8 +29,8 @@ public class Enemylv1 {
         selfSprite.setSize(width, height);
         selfSprite.setPosition(iniX, iniY);
         initialX = iniX;
-        hitbox = new Rectangle(iniX + width / 32 * 7, iniY + height / 32 * 8, width / 32 * 18f, height / 32 * 14);
-        hurtbox = new Rectangle(iniX + width / 32 * 3, iniY + height / 32 * 7, width / 32 * 26, height / 32 * 15);
+        hitbox = new Rectangle(iniX + hitboxOffsetX, iniY + hitboxOffsetY, width / 32 * 18f, height / 32 * 14);
+        hurtbox = new Rectangle(iniX + hurtboxOffsetX, iniY + hurtboxOffsetY, width / 32 * 26, height / 32 * 15);
     }
 
     public void moveWeirdly(float delta) {
@@ -36,8 +40,8 @@ public class Enemylv1 {
 
         float newY = selfSprite.getY() - speedY * delta;
 
-        hitbox.setPosition(newX + width / 32 * 7, newY + height / 32 * 8);
-        hurtbox.setPosition(newX + width / 32 * 3, newY + height / 32 * 7);
+        hitbox.setPosition(newX + hitboxOffsetX, newY + hitboxOffsetY);
+        hurtbox.setPosition(newX + hurtboxOffsetX, newY + hurtboxOffsetY);
         selfSprite.setPosition(newX, newY);
     }
 }
