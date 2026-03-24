@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Bulletlv1 {
+public class BasicBullet {
     final float speed = 10f;
     final float damage = 1;
     public Sprite selfSprite;
@@ -15,7 +15,7 @@ public class Bulletlv1 {
     public float bulletFireRate = .2f;
     float hitboxOffsetX = width / 16 * 5;
 
-    public Bulletlv1(float iniX, float iniY) {
+    public BasicBullet(float iniX, float iniY) {
         bulletlv1Texture = new Texture("bullet_texture.png");
         selfSprite = new Sprite(bulletlv1Texture);
         selfSprite.setSize(width, height);

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Enemylv1 {
+public class PopcornEnemy {
     public final float health = 1f;
     public final float speedY = .3f;
     final float amplitude = 2f;
@@ -23,7 +23,7 @@ public class Enemylv1 {
     float hurtboxOffsetX = width / 32 * 3;
     float hurtboxOffsetY = height / 32 * 7;
 
-    public Enemylv1(float iniX, float iniY) {
+    public PopcornEnemy(float iniX, float iniY) {
         enemyLv1Texture = new Texture("enemylv1.png");
         selfSprite = new Sprite(enemyLv1Texture);
         selfSprite.setSize(width, height);

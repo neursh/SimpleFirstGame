@@ -13,8 +13,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import io.github.gucksus.simplefirstgame.entities.Bulletlv1;
-import io.github.gucksus.simplefirstgame.entities.Enemylv1;
+import io.github.gucksus.simplefirstgame.entities.BasicBullet;
+import io.github.gucksus.simplefirstgame.entities.PopcornEnemy;
 import io.github.gucksus.simplefirstgame.tools.ScrollingBackground;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -27,13 +27,12 @@ public class Core extends ApplicationAdapter {
     private SpriteBatch batch;
     Sprite shipSprite;
     FitViewport viewport;
-    Array <Bulletlv1> bulletlv1Array;
+    Array <BasicBullet> bulletlv1Array;
     // This timer accounts for how long since last bullet.
     float bulletTimer = 1f;
     // How fast the spawn rate of the bullets.
     float fireRate = .2f;
     ScrollingBackground scrollingBackground;
-    Enemylv1 loneEnemylv1;
     ShapeRenderer shapeRenderer;
 
     @Override
@@ -51,7 +50,6 @@ public class Core extends ApplicationAdapter {
         batch = new SpriteBatch();
         viewport = new FitViewport(8,11);
         bulletlv1Array = new Array<>();
-        loneEnemylv1 = new Enemylv1(4f, 10f);
         shapeRenderer = new ShapeRenderer();
         scrollingBackground = new ScrollingBackground(viewport.getWorldWidth(), viewport.getWorldHeight());
     }
@@ -69,7 +67,6 @@ public class Core extends ApplicationAdapter {
         input();
         scrollingBackground.backgroundUpdate(delta);
         clampLogic();
-        loneEnemylv1.moveWeirdly(delta);
         bulletLogic(delta);
         draw();
     }
@@ -101,14 +98,15 @@ public class Core extends ApplicationAdapter {
         if (bulletTimer >= fireRate) { // If the timer exceeds the time interval, it will spawn a bullet and resets back to 0.
             float iniX = shipSprite.getX() + shipSprite.getWidth() / 2;
             float iniY = shipSprite.getY() + shipSprite.getHeight();
-            bulletlv1Array.add(new Bulletlv1(iniX, iniY));
+            bulletlv1Array.add(new BasicBullet(iniX, iniY));
             bulletTimer = 0;
         }
     }
 
     private void bulletLogic(float delta) { // Update position for all the bullets.
         bulletTimer += delta;
-        for (Bulletlv1 bullet: bulletlv1Array) {
+
+        for (BasicBullet bullet: bulletlv1Array) {
             bullet.update(delta);
         }
     }
@@ -148,8 +146,8 @@ public class Core extends ApplicationAdapter {
         shipSprite.draw(batch);
         loneEnemylv1.selfSprite.draw(batch);
 
-        for (Bulletlv1 bulletlv1: bulletlv1Array) {
-            bulletlv1.selfSprite.draw(batch);
+        for (BasicBullet basicBullet : bulletlv1Array) {
+            basicBullet.selfSprite.draw(batch);
         }
 
         batch.end();
@@ -157,7 +155,7 @@ public class Core extends ApplicationAdapter {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         drawHitbox(loneEnemylv1.hitbox);
-        for (Bulletlv1 bullet: bulletlv1Array){
+        for (BasicBullet bullet: bulletlv1Array){
             drawHitbox(bullet.hitbox);
         }
         drawHurtbox(shipHurtbox);
