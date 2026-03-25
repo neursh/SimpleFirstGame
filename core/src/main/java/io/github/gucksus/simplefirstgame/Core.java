@@ -15,7 +15,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.github.gucksus.simplefirstgame.entities.BasicBullet;
 import io.github.gucksus.simplefirstgame.entities.Bullet;
+import io.github.gucksus.simplefirstgame.entities.Enemy;
 import io.github.gucksus.simplefirstgame.entities.PopcornEnemy;
+import io.github.gucksus.simplefirstgame.levels.Level;
+import io.github.gucksus.simplefirstgame.levels.Level1;
 import io.github.gucksus.simplefirstgame.tools.ScrollingBackground;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -23,7 +26,6 @@ public class Core extends ApplicationAdapter {
     // Declare textures.
     Texture shipTexture;
     Texture basicBulletTexture;
-    Texture popcornEnemyTexture;
     Rectangle shipHurtbox;
     // Sprites.
     private SpriteBatch batch;
@@ -35,19 +37,19 @@ public class Core extends ApplicationAdapter {
     // How fast the spawn rate of the bullets.
     float fireRate = .2f;
     ScrollingBackground scrollingBackground;
+    // Levels.
+    Level currentLevel;
+    Level1 level1;
     // This is for drawing hitbox and hurtbox.
     ShapeRenderer shapeRenderer;
-    PopcornEnemy popcornEnemy;
 
     @Override
     public void create() {
         // Adds texture.
-        popcornEnemyTexture = new Texture("enemylv1.png");
         shipTexture = new Texture("ShipSprite.png");
         basicBulletTexture = new Texture("bullet_texture.png");
 
         // Initialize sprites.
-        popcornEnemy = new PopcornEnemy(popcornEnemyTexture, 4, 11);
         shipSprite = new Sprite(shipTexture);
         shipHurtbox = new Rectangle(4, 0, 1, 1);
         shipSprite.setSize(1, 1);
@@ -58,7 +60,11 @@ public class Core extends ApplicationAdapter {
         shapeRenderer = new ShapeRenderer();
         viewport = new FitViewport(8,11);
         bulletArray = new Array<>();
-        scrollingBackground = new ScrollingBackground(viewport.getWorldWidth(), viewport.getWorldHeight());
+        scrollingBackground = new ScrollingBackground(viewport.getWorldHeight());
+        // Level can be changed by changing currentLevel to desired level.
+        level1 = new Level1();
+        currentLevel = level1;
+        currentLevel.enemySpawn();
     }
 
     @Override
@@ -72,10 +78,9 @@ public class Core extends ApplicationAdapter {
         // In case delta jump too high.
         float delta = Math.min(Gdx.graphics.getDeltaTime(), 1/55f);
         input();
-        scrollingBackground.backgroundUpdate(delta);
-        popcornEnemy.update(delta);
-        bulletUpdate(delta);
         clampLogic();
+        scrollingBackground.backgroundUpdate(delta);
+        bulletUpdate(delta);
         // Update hurtbox position for the ship.
         shipHurtbox.setPosition(shipSprite.getX(), shipSprite.getY());
         draw();
@@ -141,14 +146,12 @@ public class Core extends ApplicationAdapter {
 
         batch.begin();
 
-        for (Sprite background: scrollingBackground.backgroundSprites) {
-            background.draw(batch);
-        }
+        scrollingBackground.draw(batch);
         shipSprite.draw(batch);
+        currentLevel.draw(batch);
         for (Bullet basicBullet : bulletArray) {
             basicBullet.sprite.draw(batch);
         }
-        popcornEnemy.sprite.draw(batch);
 
         batch.end();
 
@@ -158,8 +161,10 @@ public class Core extends ApplicationAdapter {
             drawHitbox(bullet.hitbox);
         }
         drawHurtbox(shipHurtbox);
-        drawHitbox(popcornEnemy.hitbox);
-        drawHurtbox(popcornEnemy.hurtbox);
+        for (Enemy enemy: level1.enemyArray){
+            drawHitbox(enemy.hitbox);
+            drawHurtbox(enemy.hurtbox);
+        }
 
         shapeRenderer.end();
 

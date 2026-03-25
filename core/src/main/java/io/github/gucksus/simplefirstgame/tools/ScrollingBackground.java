@@ -1,6 +1,7 @@
 package io.github.gucksus.simplefirstgame.tools;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class ScrollingBackground {
@@ -11,7 +12,7 @@ public class ScrollingBackground {
     public Sprite[] backgroundSprites;
     float backgroundSpeed = 3f;
 
-    public ScrollingBackground(float worldWidth, float worldHeight) {
+    public ScrollingBackground(float worldHeight) {
         // Background has 3 sprites for scrolling effect.
         backgroundSprites = new Sprite[3];
         backgroundTextureNo0 = new Texture("background1.png");
@@ -52,5 +53,11 @@ public class ScrollingBackground {
         }
         if (outOfScreenIdx != -1) // If there IS a sprite that off-screen.
             backgroundSprites[outOfScreenIdx].setY(highestY + backgroundSprites[highestIdx].getHeight());
+    }
+
+    public void draw(Batch batch) {
+        for (Sprite background: backgroundSprites) {
+            background.draw(batch);
+        }
     }
 }

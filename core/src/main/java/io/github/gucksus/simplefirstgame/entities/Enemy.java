@@ -3,7 +3,6 @@ package io.github.gucksus.simplefirstgame.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
-import org.w3c.dom.Text;
 
 public abstract class Enemy {
     public float health;
