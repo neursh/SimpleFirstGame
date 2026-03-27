@@ -49,14 +49,13 @@ public class MainShip {
     public void update(float delta, float worldWidth, float worldHeight) {
         timerSinceLastShot += delta;
         timerSinceLastDamage += delta;
-        input(delta);
-        clampLogic(worldWidth, worldHeight);
+        input(delta, worldWidth, worldHeight);
         // Update hurtbox position for the ship.
         shipHurtbox.setPosition(shipSprite.getX() + width / 2, shipSprite.getY() + height / 2.5f);
         updateBullet(delta, worldHeight);
     }
 
-    private void input(float delta) {
+    private void input(float delta, float worldWidth, float worldHeight) {
         float dx = 0;
         float dy = 0;
 
@@ -70,20 +69,18 @@ public class MainShip {
         shipSprite.translateX(directionDifferenceMultiplier.x * shipSpeed * delta);
         shipSprite.translateY(directionDifferenceMultiplier.y * shipSpeed * delta);
 
+        // Here I set so that the ship can go off-screen a quarter of its width.
+        shipSprite.setX(MathUtils.clamp(shipSprite.getX(), -(shipSprite.getWidth()/4), worldWidth - shipSprite.getWidth() / 4 * 3));
+        shipSprite.setY(MathUtils.clamp(shipSprite.getY(), 0, worldHeight - shipSprite.getHeight()));
+
         if (Gdx.input.isKeyPressed(Input.Keys.J)) {
-            if (bulletArray.size < currentBullet.maxBulletOnScreen && timerSinceLastShot >= currentBullet.fireRate) { // If the amount of bullet on screen is smaller than max amount, then allow shooting.
+            if (bulletArray.size < currentBullet.maxBulletOnScreen && timerSinceLastShot >= currentBullet.fireRate && !isDead) { // If the amount of bullet on screen is smaller than max amount, then allow shooting.
                 float iniX = shipSprite.getX() + shipSprite.getWidth() / 2;
                 float iniY = shipSprite.getY() + shipSprite.getHeight();
                 bulletArray.add(new BasicBullet(basicBulletTexture , iniX, iniY));
                 timerSinceLastShot = 0;
             }
         }
-    }
-
-    private void clampLogic(float worldWidth, float worldHeight) { // Clamp logic for the ship.
-        // Here I set so that the ship can go off-screen a quarter of its width.
-        shipSprite.setX(MathUtils.clamp(shipSprite.getX(), -(shipSprite.getWidth()/4), worldWidth - shipSprite.getWidth() / 4 * 3));
-        shipSprite.setY(MathUtils.clamp(shipSprite.getY(), 0, worldHeight - shipSprite.getHeight()));
     }
 
     private void updateBullet(float delta, float worldHeight) {
