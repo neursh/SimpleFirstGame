@@ -44,7 +44,7 @@ public class Core extends ApplicationAdapter {
         // Level can be changed by changing currentLevel to desired level.
         level1 = new Level1();
         currentLevel = level1;
-        currentLevel.enemySpawn(Gdx.graphics.getDeltaTime(), worldWidth, worldHeight);
+        currentLevel.enemySpawn(1/60f, worldWidth, worldHeight);
     }
 
     @Override
@@ -57,8 +57,7 @@ public class Core extends ApplicationAdapter {
     public void render() {
         // In case delta jump too high.
         float delta = Math.min(Gdx.graphics.getDeltaTime(), 1/55f);
-        currentLevel.enemySpawn(delta, worldWidth, worldHeight);
-
+        currentLevel.waveUpdate(delta);
         mainShip.update(delta, worldWidth, worldHeight);
         scrollingBackground.backgroundUpdate(delta);
         hitboxAndHurtboxLogic();

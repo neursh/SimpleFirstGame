@@ -8,41 +8,40 @@ import io.github.gucksus.simplefirstgame.entities.Enemy;
 
 public class Wave {
     Texture popcornEnemyTexture;
-    protected Array <Enemy> activeEnemies;
-    Array <Enemy> waveEnemies;
-    float movingInterval;
-    int totalEnemies;
+    protected Array <Enemy> activeEnemyArray;
+    public Array <Enemy> waveEnemyArray;
+    public int totalEnemies;
 
-    public Wave(Array<Enemy> activeEnemies, int totalEnemies, float spawnInterval) {
-        this.activeEnemies = activeEnemies;
-        waveEnemies = new Array<>();
+    public Wave(Array<Enemy> activeEnemyArray, int totalEnemies) {
+        this.activeEnemyArray = activeEnemyArray;
+        waveEnemyArray = new Array<>();
         this.totalEnemies = totalEnemies;
-        this.movingInterval = spawnInterval;
         popcornEnemyTexture = new Texture("enemylv1.png");
     }
 
     public void enemyUpdateRemoval() {
-        for (Enemy enemy: waveEnemies) {
+        for (Enemy enemy: waveEnemyArray) {
             enemy.updateStatus();
         }
-        for (int i = waveEnemies.size - 1; i >= 0; --i) {
-            if (waveEnemies.get(i).isDead){
-                activeEnemies.removeValue(waveEnemies.get(i), true);
-                waveEnemies.removeIndex(i);
+        for (int i = waveEnemyArray.size - 1; i >= 0; --i) {
+            if (waveEnemyArray.get(i).isDead){
+                activeEnemyArray.removeValue(waveEnemyArray.get(i), true);
+                waveEnemyArray.removeIndex(i);
+                totalEnemies--;
             }
         }
     }
 
     public void moveStraight(float startX, float startY, float endX, float endY, float duration, float delta, float interval){
-        waveEnemies.first().isMoving = true;
-        waveEnemies.first().nextFrameXDifference = (endX - startX) / duration * delta;
-        waveEnemies.first().nextFrameYDifference = (endY - startY) / duration * delta;
-        for (int i = 1; i < waveEnemies.size; i++) {
+        waveEnemyArray.first().isMoving = true;
+        waveEnemyArray.first().nextFrameXDifference = (endX - startX) / duration * delta;
+        waveEnemyArray.first().nextFrameYDifference = (endY - startY) / duration * delta;
+        for (int i = 1; i < waveEnemyArray.size; i++) {
             final int idx = i;
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    Enemy enemy = waveEnemies.get(idx);
+                    Enemy enemy = waveEnemyArray.get(idx);
                     enemy.isMoving = true;
                     enemy.nextFrameXDifference = (endX - startX) / duration * delta;
                     enemy.nextFrameYDifference = (endY - startY) / duration * delta;
@@ -51,8 +50,8 @@ public class Wave {
         }
     }
 
-    public void updateEnemyIsMovingStatus(float delta) {
-        for (Enemy enemy: waveEnemies) {
+    public void updateEnemyMovingStatus(float delta) {
+        for (Enemy enemy: waveEnemyArray) {
             enemy.updatePosition(delta);
         }
     }

@@ -19,6 +19,7 @@ public abstract class Level {
     public Level() {
         debugRenderer = new DebugRenderer();
         activeEnemies = new Array<>();
+        waveArray = new Array<>();
     }
 
     public abstract void enemySpawn(float delta, float worldWidth, float worldHeight);
@@ -36,9 +37,11 @@ public abstract class Level {
         }
     }
 
-    public void wavesUpdate() {
+    public void waveUpdate(float delta) {
         for (Wave wave: waveArray) {
-            wave.updateSpawningSameType();
+            wave.enemyUpdateRemoval();
+            wave.updateEnemyMovingStatus(delta);
         }
     }
+
 }

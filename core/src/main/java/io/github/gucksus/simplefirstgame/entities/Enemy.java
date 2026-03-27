@@ -26,8 +26,8 @@ public abstract class Enemy {
     public boolean isInvisible;
     public float nextFrameXDifference;
     public float nextFrameYDifference;
-    MovingType currentMovingType;
-    enum MovingType {Straight, Curve}
+    movingType currentMovingType;
+    enum movingType {Straight, Curve}
 
     // This constructor initializes width, height, sprite, initial position and neglect everything else. Therefore,
     // you have to add it in the subclass.
@@ -38,7 +38,7 @@ public abstract class Enemy {
         sprite.setSize(width, height);
         sprite.setPosition(iniX, iniY);
         initialX = iniX;
-        currentMovingType = MovingType.Straight;
+        currentMovingType = movingType.Straight;
     }
 
     public void updatePosition(float delta) {
@@ -47,6 +47,7 @@ public abstract class Enemy {
         switch (currentMovingType) {
             case Straight:
                 moveStraight();
+                break;
             case Curve:
                 moveCurve(delta);
         }
@@ -54,6 +55,7 @@ public abstract class Enemy {
 
     public void moveStraight() {
         sprite.translate(nextFrameXDifference, nextFrameYDifference);
+        updateEnemyHitboxAndHurtboxWhenMoved();
     }
 
     public void moveCurve(float delta) {
@@ -63,9 +65,13 @@ public abstract class Enemy {
 
         float newY = sprite.getY() + nextFrameYDifference;
 
-        hitbox.setPosition(newX + hitboxOffsetX, newY + hitboxOffsetY);
-        hurtbox.setPosition(newX + hurtboxOffsetX, newY + hurtboxOffsetY);
         sprite.setPosition(newX, newY);
+        updateEnemyHitboxAndHurtboxWhenMoved();
+    }
+
+    public void updateEnemyHitboxAndHurtboxWhenMoved() {
+        hitbox.setPosition(sprite.getX() + hitboxOffsetX, sprite.getY() + hitboxOffsetY);
+        hurtbox.setPosition(sprite.getX() + hurtboxOffsetX, sprite.getY() + hurtboxOffsetY);
     }
 
     public void updateStatus() {
