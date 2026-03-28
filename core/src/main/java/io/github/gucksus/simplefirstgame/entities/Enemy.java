@@ -24,6 +24,8 @@ public abstract class Enemy {
     public boolean isMoving;
     public boolean isInvulnerable;
     public boolean isInvisible;
+    public boolean previouslyInScreen;
+    public int numberOfTimeAllowedOnScreenLeft = 1;
     public float nextFrameXDifference;
     public float nextFrameYDifference;
     movingType currentMovingType;
@@ -74,10 +76,22 @@ public abstract class Enemy {
         hurtbox.setPosition(sprite.getX() + hurtboxOffsetX, sprite.getY() + hurtboxOffsetY);
     }
 
-    public void updateStatus() {
+    public boolean isInScreenThisFrame(float worldWidth, float worldHeight) {
+        return (sprite.getX() > -width && sprite.getX() < worldWidth && sprite.getX() > -height && sprite.getY() < worldHeight);
+    }
+
+    public void updateStatus(float worldWidth, float worldHeight) {
         if (health <= 0) {
             isDead = true;
             isInvisible = true;
+        }
+        if (isInScreenThisFrame(worldWidth, worldHeight) && !previouslyInScreen) {
+            numberOfTimeAllowedOnScreenLeft--;
+            previouslyInScreen = true;
+        } else if (!isInScreenThisFrame(worldWidth, worldHeight) && previouslyInScreen) {
+            previouslyInScreen = false;
+        }
+        if (numberOfTimeAllowedOnScreenLeft == 0 && !isInScreenThisFrame(worldWidth, worldHeight) && !isInvulnerable) {
             isInvulnerable = true;
         }
     }

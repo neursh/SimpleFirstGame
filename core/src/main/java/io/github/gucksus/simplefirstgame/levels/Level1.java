@@ -26,21 +26,21 @@ public class Level1 extends Level {
 
     @Override
     public void enemySpawn(float delta, float worldWidth, float worldHeight) {
-        waveArray.add(new Wave(activeEnemies, 10, .4f, -3, 9.5f));
-        waveArray.add(new Wave(activeEnemies, 10, .4f, 0, 12));
+        waveArray.add(new Wave(activeEnemies, 7, .4f, -3, 9.5f));
+        waveArray.add(new Wave(activeEnemies, 7, .4f, -1, 9.5f));
         Wave A1 = waveArray.first();
         Wave A2 = waveArray.peek();
         addPopcornEnemiesIntoWave(A1);
         addPopcornEnemiesIntoWave(A2);
 
-        float currentDuration = 2f;
+        float currentDuration = 3f;
         A1.moveStraight(3f - popcornEnemy.width / 2, 1.5f, currentDuration, delta);
-        A2.moveStraight(5.2f, 5, currentDuration, delta);
+        A2.moveStraight(5f - popcornEnemy.width / 2, 1.5f, currentDuration, delta);
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 A1.moveStraight(A1.startX, 11, 2.5f, delta);
-                A2.moveStraight(A2.startX, 14.5f, 2.5f, delta);
+                A2.moveStraight(A2.startX, 11, 2.5f, delta);
             }
         }, currentDuration);
         currentDuration = 2.5f;

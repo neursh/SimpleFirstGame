@@ -1,6 +1,5 @@
 package io.github.gucksus.simplefirstgame.levels;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
@@ -44,8 +43,11 @@ public abstract class Level {
                 waveArray.removeIndex(i);
                 continue;
             }
-            wave.enemyUpdateRemoval();
+            wave.enemyUpdateRemoval(worldWidth, worldHeight);
             wave.updateEnemyMovingStatus(delta);
+            if (wave.waveUpdateRemoval(worldWidth, worldHeight)) {
+                waveArray.removeIndex(i);
+            }
         }
     }
 }

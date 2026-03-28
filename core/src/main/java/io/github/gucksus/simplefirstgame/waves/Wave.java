@@ -1,6 +1,5 @@
 package io.github.gucksus.simplefirstgame.waves;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import io.github.gucksus.simplefirstgame.entities.Enemy;
@@ -24,9 +23,9 @@ public class Wave {
         this.startY = startY;
     }
 
-    public void enemyUpdateRemoval() {
+    public void enemyUpdateRemoval(float worldWidth, float worldHeight) {
         for (Enemy enemy: waveEnemyArray) {
-            enemy.updateStatus();
+            enemy.updateStatus(worldWidth, worldHeight);
         }
         for (int i = waveEnemyArray.size - 1; i >= 0; --i) {
             Enemy enemy = waveEnemyArray.get(i);
@@ -34,6 +33,14 @@ public class Wave {
                 activeEnemyArray.removeValue(enemy, true);
             }
         }
+    }
+
+    public boolean waveUpdateRemoval(float worldWidth, float worldHeight) {
+        for (Enemy enemy: waveEnemyArray) {
+            if (enemy.numberOfTimeAllowedOnScreenLeft > 0 || enemy.isInScreenThisFrame(worldWidth, worldHeight))
+                return false;
+        }
+        return true;
     }
 
     public void moveStraight(float endX, float endY, float duration, float delta){
