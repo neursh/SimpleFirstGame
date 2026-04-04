@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class BasicBullet extends Bullet {
     public BasicBullet(Texture texture ,float iniX, float iniY) {
         super(texture, iniX, iniY, .5f, .5f);
-        speed = 0f;
+        speed = 17f;
         damage = 1f;
         fireRate = .2f;
         hitboxOffsetX = width / 16 * 5;
