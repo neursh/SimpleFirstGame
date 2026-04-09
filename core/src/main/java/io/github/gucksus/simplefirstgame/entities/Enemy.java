@@ -3,6 +3,7 @@ package io.github.gucksus.simplefirstgame.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -37,6 +38,8 @@ public abstract class Enemy {
     int shootAnimationFrameNum;
     int deathAnimationFrameNum;
     float stateTime;
+    enum AnimationType {Static, Shoot, Death}
+    AnimationType currentAnimationType = AnimationType.Static;
 
     // This constructor initializes width, height, sprite, initial position and neglect everything else. Therefore,
     // you have to add it in the subclass.
@@ -50,12 +53,9 @@ public abstract class Enemy {
         currentMovingType = movingType.Straight;
     }
 
-    public void initializeAnimation(Texture shootAnimationSheet, int shootAnimationFrameNum) {
-        TextureRegion[][] temp = TextureRegion.split(shootAnimationSheet, shootAnimationSheet.getWidth() / shootAnimationFrameNum, shootAnimationSheet.getHeight());
-        TextureRegion shootFrames[] = new TextureRegion[shootAnimationFrameNum];
-        System.arraycopy(temp[0], 0, shootFrames, 0, shootAnimationFrameNum);
-        shootAnimation = new Animation<>(0.1f, shootFrames);
-        this.shootAnimationFrameNum = shootAnimationFrameNum;
+    public void initializeAnimation(TextureRegion[] shootAnimationFrames) {
+        shootAnimation = new Animation<>(0.1f, shootAnimationFrames);
+        this.shootAnimationFrameNum = shootAnimationFrames.length;
         stateTime = 0;
     }
 
@@ -109,6 +109,24 @@ public abstract class Enemy {
         }
         if (numberOfTimeAllowedOnScreenLeft == 0 && !isInScreenThisFrame(worldWidth, worldHeight) && !isInvulnerable) {
             isInvulnerable = true;
+        }
+    }
+
+    public void triggerShootAnimation() {
+        currentAnimationType = AnimationType.Shoot;
+    }
+
+    public void draw(SpriteBatch batch, float delta) {
+        switch (currentAnimationType) {
+            case Static:
+                sprite.draw(batch);
+                break;
+            case Shoot:
+                if (shootAnimationFrameNum != 0) {
+                    stateTime += delta;
+                    TextureRegion currentFrame = shootAnimation.getKeyFrame(stateTime);
+                    batch.draw(currentFrame, sprite.getX(), sprite.getY(), width, height);
+                }
         }
     }
 

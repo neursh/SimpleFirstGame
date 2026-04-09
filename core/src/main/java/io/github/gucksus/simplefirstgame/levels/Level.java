@@ -1,6 +1,7 @@
 package io.github.gucksus.simplefirstgame.levels;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import io.github.gucksus.simplefirstgame.entities.Enemy;
@@ -24,10 +25,10 @@ public abstract class Level {
 
     public abstract void enemySpawn(float worldWidth, float worldHeight);
 
-    public void draw(Batch batch) {
+    public void draw(SpriteBatch batch) {
         for (Enemy enemy : activeEnemies)
             if (!enemy.isInvisible) {
-                enemy.sprite.draw(batch);
+                enemy.draw(batch, delta);
             }
     }
 

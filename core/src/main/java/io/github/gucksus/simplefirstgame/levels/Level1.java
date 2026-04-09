@@ -49,6 +49,10 @@ public class Level1 extends Level {
 //        currentDuration = 2.5f;
         TextureRegion[][] temp = TextureRegion.split(skullAnimationSheet, skullAnimationSheet.getWidth() / 11, skullAnimationSheet.getHeight() / 2);
         Enemy enemy = new SkullShooterEnemy(temp[0][0], 4, 4);
+        TextureRegion[] frames = new TextureRegion[11];
+        System.arraycopy(temp[0], 0, frames, 0, 11);
+        enemy.initializeAnimation(temp[0]);
+        enemy.triggerShootAnimation();
         activeEnemies.add(enemy);
     }
 
