@@ -1,15 +1,12 @@
 package io.github.gucksus.simplefirstgame.entities;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
-public class PopcornEnemy extends Enemy {
-    public PopcornEnemy(TextureRegion staticTexture, float iniX, float iniY) {
-        super(staticTexture , iniX, iniY, 1, 1);
-        health = 1f;
-        amplitude = 2f;
-        frequency = 2f;
+public class SkullShooterEnemy extends Enemy{
+    public SkullShooterEnemy(TextureRegion staticTexture, float iniX, float iniY) {
+        super(staticTexture , iniX, iniY, 4, 4);
+        health = 3f;
         hitboxOffsetX = width / 32 * 6;
         hitboxOffsetY = height / 32 * 6;
         hurtboxOffsetX = width / 32 * 3;

@@ -40,7 +40,7 @@ public abstract class Enemy {
 
     // This constructor initializes width, height, sprite, initial position and neglect everything else. Therefore,
     // you have to add it in the subclass.
-    public Enemy(Texture staticTexture, float iniX, float iniY, float width, float height) {
+    public Enemy(TextureRegion staticTexture, float iniX, float iniY, float width, float height) {
         this.width = width;
         this.height = height;
         sprite = new Sprite(staticTexture);
