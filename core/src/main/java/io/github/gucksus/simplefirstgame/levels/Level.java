@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import io.github.gucksus.simplefirstgame.entities.Enemy;
+import io.github.gucksus.simplefirstgame.entities.base.EnemyBullet;
 import io.github.gucksus.simplefirstgame.tools.DebugRenderer;
 import io.github.gucksus.simplefirstgame.waves.Wave;
 

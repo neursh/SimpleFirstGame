@@ -20,6 +20,8 @@ public abstract class Enemy {
     public float height;
     float hitboxOffsetX;
     float hitboxOffsetY;
+    float shootPointOffsetX;
+    float shootPointOffsetY;
     float hurtboxOffsetX;
     float hurtboxOffsetY;
     public boolean isDead = false;
@@ -164,6 +166,10 @@ public abstract class Enemy {
                     batch.draw(currentFrame, sprite.getX(), sprite.getY(), width, height);
                 }
         }
+    }
+
+    void shoot(MainShip ship) {
+
     }
 
 }
