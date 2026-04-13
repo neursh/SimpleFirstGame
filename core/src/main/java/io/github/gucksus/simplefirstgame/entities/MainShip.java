@@ -143,11 +143,11 @@ public class MainShip {
     }
 
     public float getShipHurtboxCenterY() {
-        return shipHurtbox.y + hurtboxOffsetY / 2;
+        return shipHurtbox.y + shipHurtbox.radius / 2;
     }
 
     public float getShipHurtboxCenterX() {
-        return shipSprite.getX() + width / 2;
+        return shipHurtbox.x + shipHurtbox.radius / 2;
     }
 
     public void dispose() {

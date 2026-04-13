@@ -20,7 +20,7 @@ public class PopcornEnemy extends Enemy {
     }
 
     @Override
-    protected EnemyBullet returnBulletType(float shootPointX, float shootPointY, float shootAngle) {
+    protected EnemyBullet returnBulletType(float shootPointX, float shootPointY, float dx, float dy) {
         return null;
     }
 }

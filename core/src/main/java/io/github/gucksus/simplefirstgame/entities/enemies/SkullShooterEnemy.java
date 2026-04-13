@@ -13,19 +13,19 @@ public class SkullShooterEnemy extends Enemy {
         health = 3f;
         hitboxOffsetX = width / 32 * 6;
         hitboxOffsetY = height / 32 * 6;
-        shootPointOffsetX = width / 32 * 16;
-        shootPointOffsetY = .4f;
+        shootPointOffsetX = 4/ 64f * 32;
+        shootPointOffsetY = 4 / 64f * 22;
         hurtboxOffsetX = width / 32 * 3;
         hurtboxOffsetY = height / 32 * 7;
         hitbox = new Rectangle(iniX + hitboxOffsetX, iniY + hitboxOffsetY, width / 32 * 20f, height / 32 * 16);
         hurtbox = new Rectangle(iniX + hurtboxOffsetX, iniY + hurtboxOffsetY, width / 32 * 26, height / 32 * 15);
         bulletTexture = new Texture("Bullet/skull_bullet_texture.png");
         animationIntervalTime = 1;
-        shootAnimationRepeat = 5;
+        shootAnimationRepeat = 15;
     }
 
     @Override
-    protected EnemyBullet returnBulletType(float shootPointX, float shootPointY, float shootAngle) {
-        return new SkullShooterBullet(bulletTexture, shootPointX, shootPointY, 2, 2, shootAngle);
+    protected EnemyBullet returnBulletType(float shootPointX, float shootPointY, float dx, float dy) {
+        return new SkullShooterBullet(bulletTexture, shootPointX, shootPointY, 2, 2, dx, dy);
     }
 }

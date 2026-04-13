@@ -84,7 +84,7 @@ public abstract class Level {
             EnemyBullet enemyBullet = enemy.shoot(mainShip);
             if (enemyBullet != null) {
                 enemyBulletArray.add(enemyBullet);
-                System.out.printf("Ship: %f, %f\nEnemy: %f, %f\n->Angle: %f", mainShip.getShipHurtboxCenterX(), mainShip.getShipHurtboxCenterY(), enemy.sprite.getX(), enemy.sprite.getY(), MathUtils.atan((mainShip.getShipHurtboxCenterY() - enemy.sprite.getY()) / (mainShip.getShipHurtboxCenterX() - enemy.sprite.getX())) * MathUtils.radiansToDegrees);
+//                System.out.printf("Ship: %f, %f\nEnemy: %f, %f\n->Angle: %f", mainShip.getShipHurtboxCenterX(), mainShip.getShipHurtboxCenterY(), enemy.sprite.getX(), enemy.sprite.getY(), enemyBulletArray.peek().shootAngle * MathUtils.radiansToDegrees);
             }
         }
     }

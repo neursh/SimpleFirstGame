@@ -3,15 +3,16 @@ package io.github.gucksus.simplefirstgame.entities.base;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
-/*REMEBER TO DECLARE ALL THESE VARIABLES IN SUBCLASSES: isCircle, circleHitBox OR rectangleHitbox.*/
+/*REMEMBER TO DECLARE ALL THESE VARIABLES IN SUBCLASSES: isCircle, circleHitBox OR rectangleHitbox, speed.*/
 public abstract class EnemyBullet {
-    float speed;
+    float iniX;
+    float iniY;
+    protected float speed;
     float width;
     float height;
-    public float shootAngle;
     float timer;
     float damage = 1;
     public Sprite sprite;
@@ -28,15 +29,19 @@ public abstract class EnemyBullet {
         Roundabout
     }
     protected MovingType movingType;
+    public Vector2 direction;
 
-    public EnemyBullet (Texture texture, float iniX, float iniY, float width, float height, float shootAngle) {
+    public EnemyBullet (Texture texture, float iniX, float iniY, float width, float height, float dx, float dy) {
         this.width = width;
         this.height = height;
+        this.iniX = iniX;
+        this.iniY = iniY;
         sprite = new Sprite(texture);
         sprite.setSize(width, height);
         sprite.setCenterX(iniX);
         sprite.setY(iniY);
-        this.shootAngle = shootAngle;
+        direction = new Vector2();
+        direction.set(dx, dy);
     }
 
     void updateHitbox() {
@@ -48,8 +53,9 @@ public abstract class EnemyBullet {
 
     public void updateStraight(float delta) {
         timer += delta;
-        float theTraveledDistance = speed * timer;
-        sprite.setPosition(theTraveledDistance * MathUtils.cos(shootAngle), theTraveledDistance * MathUtils.sin(shootAngle));
+        float distanceMultiplier = speed / direction.len();
+        sprite.setCenterX(iniX + direction.x * distanceMultiplier * timer);
+        sprite.setCenterY(iniY + direction.y * distanceMultiplier * timer);
     }
 
     public void update(float delta) {

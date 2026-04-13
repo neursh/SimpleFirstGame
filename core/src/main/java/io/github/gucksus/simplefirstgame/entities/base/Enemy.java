@@ -177,15 +177,16 @@ public abstract class Enemy {
         return (shootAnimation.getKeyFrameIndex(stateTime) == 6);
     }
 
-    protected abstract EnemyBullet returnBulletType(float shootPointX, float shootPointY, float shootAngle);
+    protected abstract EnemyBullet returnBulletType(float shootPointX, float shootPointY, float dx, float dy);
 
     public EnemyBullet shoot(MainShip mainShip) {
-        if (shootThisFrame() && !shootInThisAnimation) {
+        if (shootThisFrame() && !shootInThisAnimation && !isDead) {
             shootInThisAnimation = true;
             float shootPointX = sprite.getX() + shootPointOffsetX;
             float shootPointY = sprite.getY() + shootPointOffsetY;
-            float shootAngle = MathUtils.atan(Math.abs(shootPointY - mainShip.getShipHurtboxCenterY()) / Math.abs(shootPointX - mainShip.getShipHurtboxCenterX()));
-            return returnBulletType(shootPointX, shootPointY, shootAngle);
+            float dx = mainShip.getShipHurtboxCenterX() - shootPointX;
+            float dy = mainShip.getShipHurtboxCenterY() - shootPointY;
+            return returnBulletType(shootPointX, shootPointY, dx, dy);
         }
         else return null;
     }
