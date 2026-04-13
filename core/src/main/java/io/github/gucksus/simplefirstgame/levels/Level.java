@@ -34,6 +34,9 @@ public abstract class Level {
             if (!enemy.isInvisible) {
                 enemy.draw(batch, delta);
             }
+        for (EnemyBullet enemyBullet: enemyBulletArray) {
+            enemyBullet.sprite.draw(batch);
+        }
     }
 
     public void drawEnemyHitboxAndHurtBox(ShapeRenderer shapeRenderer) {
@@ -47,6 +50,7 @@ public abstract class Level {
         updateDelta(delta);
         wavesUpdate(delta, worldWidth, worldHeight);
         addEnemyBulletUpdate(mainShip);
+        enemyBulletPositonUpdate(delta);
     }
 
     public void wavesUpdate(float delta, float worldWidth, float worldHeight) {
@@ -82,6 +86,12 @@ public abstract class Level {
                 enemyBulletArray.add(enemyBullet);
                 System.out.printf("Ship: %f, %f\nEnemy: %f, %f\n->Angle: %f", mainShip.getShipHurtboxCenterX(), mainShip.getShipHurtboxCenterY(), enemy.sprite.getX(), enemy.sprite.getY(), MathUtils.atan((mainShip.getShipHurtboxCenterY() - enemy.sprite.getY()) / (mainShip.getShipHurtboxCenterX() - enemy.sprite.getX())) * MathUtils.radiansToDegrees);
             }
+        }
+    }
+
+    public void enemyBulletPositonUpdate(float delta) {
+        for (EnemyBullet enemyBullet: enemyBulletArray) {
+            enemyBullet.update(delta);
         }
     }
 

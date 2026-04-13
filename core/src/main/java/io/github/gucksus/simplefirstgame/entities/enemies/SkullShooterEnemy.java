@@ -14,7 +14,7 @@ public class SkullShooterEnemy extends Enemy {
         hitboxOffsetX = width / 32 * 6;
         hitboxOffsetY = height / 32 * 6;
         shootPointOffsetX = width / 32 * 16;
-        shootPointOffsetY = height / 32 * 11.4f;
+        shootPointOffsetY = .4f;
         hurtboxOffsetX = width / 32 * 3;
         hurtboxOffsetY = height / 32 * 7;
         hitbox = new Rectangle(iniX + hitboxOffsetX, iniY + hitboxOffsetY, width / 32 * 20f, height / 32 * 16);
@@ -26,6 +26,6 @@ public class SkullShooterEnemy extends Enemy {
 
     @Override
     protected EnemyBullet returnBulletType(float shootPointX, float shootPointY, float shootAngle) {
-        return new SkullShooterBullet(bulletTexture, shootPointX, shootPointY, 1, 1, shootAngle);
+        return new SkullShooterBullet(bulletTexture, shootPointX, shootPointY, 2, 2, shootAngle);
     }
 }
