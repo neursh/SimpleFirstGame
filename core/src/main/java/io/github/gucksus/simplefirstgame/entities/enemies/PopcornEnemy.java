@@ -9,8 +9,6 @@ public class PopcornEnemy extends Enemy {
     public PopcornEnemy(TextureRegion staticTexture, float iniX, float iniY) {
         super(staticTexture , iniX, iniY, 1, 1);
         health = 1f;
-        amplitude = 2f;
-        frequency = 2f;
         hitboxOffsetX = width / 32 * 6;
         hitboxOffsetY = height / 32 * 6;
         hurtboxOffsetX = width / 32 * 3;
@@ -23,4 +21,7 @@ public class PopcornEnemy extends Enemy {
     protected EnemyBullet returnBulletType(float shootPointX, float shootPointY, float dx, float dy) {
         return null;
     }
+
+    @Override
+    protected boolean shootThisFrame() {return false;}
 }

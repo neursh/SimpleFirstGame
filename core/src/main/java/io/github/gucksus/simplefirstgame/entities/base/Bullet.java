@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
 /**
- * <b>YOU HAVE TO DECLARE THESE VARIABLES IN SUBCLASSES</b>: speed, damage, fireRate, hitboxOffsetX, hitbox, maxBulletOnScreen.
+ * <b>YOU HAVE TO DECLARE THESE VARIABLES IN SUBCLASSES:</b> <I>speed, damage, fireRate, hitboxOffsetX, hitbox, maxBulletOnScreen.</I>
  */
 public abstract class Bullet {
     protected float speed;

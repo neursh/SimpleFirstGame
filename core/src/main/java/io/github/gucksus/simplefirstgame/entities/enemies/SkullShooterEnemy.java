@@ -20,12 +20,17 @@ public class SkullShooterEnemy extends Enemy {
         hitbox = new Rectangle(iniX + hitboxOffsetX, iniY + hitboxOffsetY, width / 32 * 20f, height / 32 * 16);
         hurtbox = new Rectangle(iniX + hurtboxOffsetX, iniY + hurtboxOffsetY, width / 32 * 26, height / 32 * 15);
         this.bulletTexture = bulletTexture;
-        animationIntervalTime = 1;
+        animationInterval = 1;
         shootAnimationRepeat = 15;
     }
 
     @Override
     protected EnemyBullet returnBulletType(float shootPointX, float shootPointY, float dx, float dy) {
         return new SkullShooterBullet(bulletTexture, shootPointX, shootPointY, 2, 2, dx, dy);
+    }
+
+    @Override
+    protected boolean shootThisFrame() {
+        return (shootAnimation.getKeyFrameIndex(stateTime) == 6);
     }
 }
