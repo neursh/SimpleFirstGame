@@ -6,7 +6,10 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-/*REMEMBER TO DECLARE ALL THESE VARIABLES IN SUBCLASSES: isCircle, circleHitBox OR rectangleHitbox, speed.*/
+/**
+ * <b>YOU HAVE TO DECLARE THESE VARIABLE IN SUBCLASSES:</b>
+ * <i>movingType, isCircle, circleHitBox <b>OR</b> rectangleHitbox, speed.</i>
+ */
 public abstract class EnemyBullet {
     float iniX;
     float iniY;
@@ -51,6 +54,10 @@ public abstract class EnemyBullet {
             rectangleHitbox.setPosition(sprite.getX() + rectangleHitboxOffsetX, sprite.getY() + rectangleHitboxOffsetY);
     }
 
+    /**
+     * This works based on 2D vector.
+     * @param delta The frame delta time.
+     */
     public void updateStraight(float delta) {
         timer += delta;
         float distanceMultiplier = speed / direction.len();

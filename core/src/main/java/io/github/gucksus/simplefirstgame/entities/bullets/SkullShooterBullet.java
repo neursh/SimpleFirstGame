@@ -10,6 +10,6 @@ public class SkullShooterBullet extends EnemyBullet {
         movingType = MovingType.Straight;
         isCircle = true;
         circleHitbox = new Circle(sprite.getX(), sprite.getY(), .4f);
-        speed = 2f;
+        speed = 5f;
     }
 }

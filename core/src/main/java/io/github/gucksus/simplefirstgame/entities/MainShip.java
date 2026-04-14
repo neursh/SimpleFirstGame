@@ -15,7 +15,6 @@ import io.github.gucksus.simplefirstgame.entities.base.Bullet;
 import io.github.gucksus.simplefirstgame.entities.bullets.BasicBullet;
 
 public class MainShip {
-    Texture shipTexture;
     Texture basicBulletTexture;
     public Circle shipHurtbox;
     float hurtboxOffsetY;
@@ -41,17 +40,14 @@ public class MainShip {
         this.height = height;
         hurtboxOffsetY = + height / 2.5f * 1.01f;
         timerSinceLastDamage = invulnerableDuration;
-        shipTexture = new Texture("Mainship/ShipSprite.png");
         basicBulletTexture = new Texture("Bullet/basicBullet.png");
         spinAnimationSheet = new Texture("Mainship/ship_sprite_animation1.png");
 
         TextureRegion[][] temp = TextureRegion.split(spinAnimationSheet, spinAnimationSheet.getWidth() / 11, spinAnimationSheet.getHeight());
-        TextureRegion[] spinFrames = new TextureRegion[11];
-        System.arraycopy(temp[0], 0, spinFrames, 0, 11);
 
-        spinAnimation = new Animation<>(0.1f, spinFrames);
+        spinAnimation = new Animation<>(0.1f, temp[0]);
 
-        shipSprite = new Sprite(spinFrames[0]);
+        shipSprite = new Sprite(temp[0][0]);
         shipSprite.setSize(width, height);
         shipSprite.setCenterX(centerX);
         shipSprite.setY(iniY);
@@ -102,6 +98,11 @@ public class MainShip {
         }
     }
 
+    /**
+     * This method updates bullet position; checks if a bullet is out of screen and removes any bullet that does.
+     * @param delta The frame delta time.
+     * @param worldHeight The height of the world.
+     */
     private void updateBullet(float delta, float worldHeight) {
         for (int i = bulletArray.size - 1; i >= 0; i--){
             bulletArray.get(i).update(delta);
@@ -151,7 +152,6 @@ public class MainShip {
     }
 
     public void dispose() {
-        shipTexture.dispose();
         basicBulletTexture.dispose();
         spinAnimationSheet.dispose();
     }
