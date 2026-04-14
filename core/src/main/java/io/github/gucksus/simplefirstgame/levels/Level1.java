@@ -3,6 +3,7 @@ package io.github.gucksus.simplefirstgame.levels;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.github.gucksus.simplefirstgame.entities.base.Enemy;
+import io.github.gucksus.simplefirstgame.entities.base.Level;
 import io.github.gucksus.simplefirstgame.entities.enemies.PopcornEnemy;
 import io.github.gucksus.simplefirstgame.entities.enemies.SkullShooterEnemy;
 import io.github.gucksus.simplefirstgame.waves.Wave;

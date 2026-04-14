@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.github.gucksus.simplefirstgame.entities.base.Bullet;
 import io.github.gucksus.simplefirstgame.entities.base.Enemy;
 import io.github.gucksus.simplefirstgame.entities.MainShip;
-import io.github.gucksus.simplefirstgame.levels.Level;
+import io.github.gucksus.simplefirstgame.entities.base.Level;
 import io.github.gucksus.simplefirstgame.levels.Level1;
 import io.github.gucksus.simplefirstgame.tools.ScrollingBackground;
 

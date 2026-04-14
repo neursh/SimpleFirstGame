@@ -1,13 +1,12 @@
-package io.github.gucksus.simplefirstgame.levels;
+package io.github.gucksus.simplefirstgame.entities.base;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import io.github.gucksus.simplefirstgame.entities.MainShip;
-import io.github.gucksus.simplefirstgame.entities.base.Enemy;
-import io.github.gucksus.simplefirstgame.entities.base.EnemyBullet;
 import io.github.gucksus.simplefirstgame.tools.DebugRenderer;
 import io.github.gucksus.simplefirstgame.waves.Wave;
+
 
 public abstract class Level {
     public boolean isLevelCompleted = false;
@@ -16,7 +15,7 @@ public abstract class Level {
     public Array<Enemy> activeEnemies;
     public Array<Wave> waveArray;
     public boolean isLevelStarted;
-    public float delta = 1;
+    public float delta;
     public Array<EnemyBullet> enemyBulletArray;
 
     public Level() {
@@ -49,7 +48,7 @@ public abstract class Level {
         updateDelta(delta);
         wavesUpdate(delta, worldWidth, worldHeight);
         addEnemyBulletUpdate(mainShip);
-        enemyBulletPositonUpdate(delta);
+        enemyBulletUpdate(delta);
     }
 
     public void wavesUpdate(float delta, float worldWidth, float worldHeight) {
@@ -71,6 +70,12 @@ public abstract class Level {
         this.delta = delta;
     }
 
+    /**
+     * This method is used to trigger start the level only when libGdx is fully stable.
+     * @param delta The frame delta time.
+     * @param worldWidth The width of the world.
+     * @param worldHeight The height of the world.
+     */
     public void startLevelIfHaveNotStarted (float delta, float worldWidth, float worldHeight) {
         if (!this.isLevelStarted && Math.abs(this.delta - delta) <= .001f) {
             this.enemySpawn(worldWidth, worldHeight);
@@ -83,12 +88,11 @@ public abstract class Level {
             EnemyBullet enemyBullet = enemy.shoot(mainShip);
             if (enemyBullet != null) {
                 enemyBulletArray.add(enemyBullet);
-//                System.out.printf("Ship: %f, %f\nEnemy: %f, %f\n->Angle: %f", mainShip.getShipHurtboxCenterX(), mainShip.getShipHurtboxCenterY(), enemy.sprite.getX(), enemy.sprite.getY(), enemyBulletArray.peek().shootAngle * MathUtils.radiansToDegrees);
             }
         }
     }
 
-    public void enemyBulletPositonUpdate(float delta) {
+    public void enemyBulletUpdate(float delta) {
         for (EnemyBullet enemyBullet: enemyBulletArray) {
             enemyBullet.update(delta);
         }
