@@ -22,6 +22,7 @@ public abstract class Level {
     public Array<Bullet> bulletArray;
 
     public Level() {
+        delta = 1;
         debugRenderer = new DebugRenderer();
         activeEnemies = new Array<>();
         waveArray = new Array<>();
@@ -50,7 +51,14 @@ public abstract class Level {
             debugRenderer.drawHurtbox(enemy.hurtbox, shapeRenderer);
         }
         for (EnemyBullet enemyBullet: enemyBulletArray) {
-            debugRenderer.drawCircleHitbox(enemyBullet.circleHitbox, shapeRenderer);
+            if (enemyBullet.isCircle) {
+                debugRenderer.drawCircleHitbox(enemyBullet.circleHitbox, shapeRenderer);
+            } else {
+                debugRenderer.drawHitbox(enemyBullet.rectangleHitbox, shapeRenderer);
+            }
+        }
+        for (Bullet bullet : bulletArray) {
+            debugRenderer.drawHitbox(bullet.hitbox, shapeRenderer);
         }
     }
 
@@ -127,6 +135,10 @@ public abstract class Level {
         }
     }
 
+    /**
+     * This method runs every time ship takes damage.
+     * @param mainShip The ship that takes damage.
+     */
     public void mainShipTakeDamage(MainShip mainShip) {
         mainShip.lives -= 1;
         if (mainShip.lives == 0){

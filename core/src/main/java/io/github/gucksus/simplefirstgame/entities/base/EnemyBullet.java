@@ -23,8 +23,8 @@ public abstract class EnemyBullet {
     float rectangleHitboxOffsetX;
     float rectangleHitboxOffsetY;
     protected Circle circleHitbox;
-    float circleHitboxOffsetX;
-    float circleHitboxOffsetY;
+    protected float circleHitboxOffsetX;
+    protected float circleHitboxOffsetY;
     protected boolean isCircle;
     protected enum MovingType {
         Straight,

@@ -58,6 +58,8 @@ public class Level1 extends Level {
         activeEnemies.add(enemy);
         A1.startX = 4;
         A1.startY = 4;
+        A1.moveAllEnemyStraightAfterXSeconds(1, 2, 4, delta, 0);
+        A1.stopAllEnemyMovementAfterXSeconds(4);
     }
 
     public void dispose() {

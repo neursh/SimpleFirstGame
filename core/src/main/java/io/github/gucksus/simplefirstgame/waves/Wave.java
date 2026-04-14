@@ -75,17 +75,15 @@ public class Wave {
      * @param endY The destination's Y coordinate.
      * @param duration The amount of time for the first enemy of the wave to reach the destination.
      * @param delta The frame delta time.
+     * @param X The amount of time to delay.
      */
-    public void moveStraight(float endX, float endY, float duration, float delta){
+    public void moveAllEnemyStraightAfterXSeconds(float endX, float endY, float duration, float delta, float X){
         // Here the duration is the amount of time it takes for the first enemy to reach the destination.
         float lastStartX = startX;
         float lastStartY = startY;
         startX = endX;
         startY = endY;
-        waveEnemyArray.first().isMoving = true;
-        waveEnemyArray.first().nextFrameXDifference = (endX - lastStartX) / duration * delta;
-        waveEnemyArray.first().nextFrameYDifference = (endY - lastStartY) / duration * delta;
-        for (int i = 1; i < waveEnemyArray.size; i++) {
+        for (int i = 0; i < waveEnemyArray.size; i++) {
             final int idx = i;
             if (!waveEnemyArray.get(i).isDead){
                 Timer.schedule(new Timer.Task() {
@@ -96,16 +94,13 @@ public class Wave {
                         enemy.nextFrameXDifference = (endX - lastStartX) / duration * delta;
                         enemy.nextFrameYDifference = (endY - lastStartY) / duration * delta;
                     }
-                }, i * interval);
+                }, X + i * interval);
             }
         }
     }
 
-    public void stopAllEnemyMovement() {
-        waveEnemyArray.first().isMoving = false;
-        waveEnemyArray.first().nextFrameXDifference = 0;
-        waveEnemyArray.first().nextFrameYDifference = 0;
-        for (int i = 1; i < waveEnemyArray.size; i++) {
+    public void stopAllEnemyMovementAfterXSeconds(float X) {
+        for (int i = 0; i < waveEnemyArray.size; i++) {
             final int idx = i;
             if (!waveEnemyArray.get(i).isDead){
                 Timer.schedule(new Timer.Task() {
@@ -116,7 +111,7 @@ public class Wave {
                         enemy.nextFrameXDifference = 0;
                         enemy.nextFrameYDifference = 0;
                     }
-                }, i * interval);
+                }, X + i * interval);
             }
         }
     }
