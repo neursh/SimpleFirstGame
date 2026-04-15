@@ -5,8 +5,11 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import io.github.gucksus.simplefirstgame.entities.MainShip;
+import io.github.gucksus.simplefirstgame.tools.BoxWithOffset;
 
 /**
  * <b>YOU HAVE TO DECLARE THESE VARIABLE IN SUBCLASSES:</b> <i>health, hitboxOffsetX and hitboxOffsetY, hurtboxOffsetX and hurtboxOffsetY, shootPointOffsetX and shootPointOffsetY, hitbox, hurtbox, bulletTexture, animationIntervalTime, shootAnimationRepeat.</i> <br>
@@ -15,18 +18,15 @@ import io.github.gucksus.simplefirstgame.entities.MainShip;
 public abstract class Enemy {
     public float health;
     public Sprite sprite;
-    public Rectangle hitbox;
-    public Rectangle hurtbox;
+    public Array<BoxWithOffset> hitboxes;
+    public Array<BoxWithOffset> hurtboxes;
     public float width;
     public float height;
-    protected float hitboxOffsetX;
-    protected float hitboxOffsetY;
-    protected float shootPointOffsetX;
-    protected float shootPointOffsetY;
-    protected float hurtboxOffsetX;
-    protected float hurtboxOffsetY;
+    protected Array<Vector2> shootPointsOffsets;
     protected int textureSizeX;
     protected int textureSizeY;
+    protected float pixelLengthX;
+    protected float pixelLengthY;
     public boolean isDead = false;
     public boolean isMoving;
     public boolean isInvulnerable;
@@ -69,10 +69,15 @@ public abstract class Enemy {
         this.height = height;
         textureSizeX = staticTexture.getRegionWidth();
         textureSizeY = staticTexture.getRegionHeight();
+        pixelLengthX = width / textureSizeX;
+        pixelLengthY = height / textureSizeY;
         sprite = new Sprite(staticTexture);
         sprite.setSize(width, height);
         sprite.setPosition(iniX, iniY);
         currentMovingType = movingType.Straight;
+        hitboxes = new Array<>();
+        hurtboxes = new Array<>();
+        shootPointsOffsets = new Array<>();
     }
 
     public void initializeShootAnimation(TextureRegion[] shootAnimationFrames) {
@@ -103,8 +108,12 @@ public abstract class Enemy {
     }
 
     public void updateEnemyHitboxAndHurtboxWhenMoved() {
-        hitbox.setPosition(sprite.getX() + hitboxOffsetX, sprite.getY() + hitboxOffsetY);
-        hurtbox.setPosition(sprite.getX() + hurtboxOffsetX, sprite.getY() + hurtboxOffsetY);
+        for (BoxWithOffset hitbox: hitboxes) {
+            hitbox.update(sprite.getX(), sprite.getY());
+        }
+        for (BoxWithOffset hurtbox: hurtboxes) {
+            hurtbox.update(sprite.getX(), sprite.getY());
+        }
     }
 
     /**
@@ -224,12 +233,31 @@ public abstract class Enemy {
     public EnemyBullet shoot(MainShip mainShip) {
         if (shootThisFrame() && !shootInThisAnimation && !isDead && shootAnimationFrameNum != 0) {
             shootInThisAnimation = true;
-            float shootPointX = sprite.getX() + shootPointOffsetX;
-            float shootPointY = sprite.getY() + shootPointOffsetY;
-            float dx = mainShip.getShipHurtboxCenterX() - shootPointX;
-            float dy = mainShip.getShipHurtboxCenterY() - shootPointY;
-            return returnBulletType(shootPointX, shootPointY, dx, dy);
+            for (Vector2 shootPointOffset: shootPointsOffsets) {
+                float shootPointX = sprite.getX() + shootPointOffset.x;
+                float shootPointY = sprite.getY() + shootPointOffset.y;
+                float dx = mainShip.getShipHurtboxCenterX() - shootPointX;
+                float dy = mainShip.getShipHurtboxCenterY() - shootPointY;
+                return returnBulletType(shootPointX, shootPointY, dx, dy);
+            }
         }
         else return null;
+        return null;
+    }
+
+    public boolean hitboxIntersectWithMainShip(MainShip mainShip) {
+        for (BoxWithOffset hitbox: hitboxes) {
+            if (Intersector.overlaps(mainShip.shipHurtbox, hitbox.getBox()))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean hurtboxIntersectWithThisBullet(Bullet bullet) {
+        for (BoxWithOffset hurtbox: hurtboxes) {
+            if (bullet.hitbox.overlaps(hurtbox.getBox()))
+                return true;
+        }
+        return false;
     }
 }

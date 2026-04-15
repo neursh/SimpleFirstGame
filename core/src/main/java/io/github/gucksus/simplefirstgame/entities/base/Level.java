@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.utils.Array;
 import io.github.gucksus.simplefirstgame.entities.MainShip;
 import io.github.gucksus.simplefirstgame.tools.DebugRenderer;
+import io.github.gucksus.simplefirstgame.tools.BoxWithOffset;
 import io.github.gucksus.simplefirstgame.waves.Wave;
 
 
@@ -50,8 +51,12 @@ public abstract class Level {
 
     public void drawEnemyHitboxAndHurtBox(ShapeRenderer shapeRenderer) {
         for (Enemy enemy : activeEnemies) {
-            debugRenderer.drawHitbox(enemy.hitbox, shapeRenderer);
-            debugRenderer.drawHurtbox(enemy.hurtbox, shapeRenderer);
+            for (BoxWithOffset hitbox : enemy.hitboxes) {
+                debugRenderer.drawHitbox(hitbox.getBox(), shapeRenderer);
+            }
+            for (BoxWithOffset hurtbox: enemy.hurtboxes) {
+                debugRenderer.drawHurtbox(hurtbox.getBox(), shapeRenderer);
+            }
         }
         for (EnemyBullet enemyBullet: enemyBulletArray) {
             if (enemyBullet.isCircle) {
@@ -105,12 +110,11 @@ public abstract class Level {
         if (!this.isLevelStarted && Math.abs(this.delta - delta) <= .001f) {
             if (!debugMode) {
                 this.enemySpawn(worldWidth, worldHeight);
-                this.isLevelStarted = true;
             }
             else {
                 this.enemySpawnDebug(worldWidth, worldHeight);
-                this.isLevelStarted = true;
             }
+            this.isLevelStarted = true;
         }
     }
 
@@ -162,12 +166,12 @@ public abstract class Level {
     public void hitboxAndHurtboxLogic(MainShip mainShip) {
         for (int enemyIdx = activeEnemies.size - 1; enemyIdx >= 0; enemyIdx--){
             Enemy currentEnemy = activeEnemies.get(enemyIdx);
-            if (Intersector.overlaps(mainShip.shipHurtbox, currentEnemy.hitbox) && mainShip.timerSinceLastDamage > mainShip.invulnerableDuration && !currentEnemy.isHarmless){
+            if (currentEnemy.hitboxIntersectWithMainShip(mainShip) && mainShip.timerSinceLastDamage > mainShip.invulnerableDuration && !currentEnemy.isHarmless){
                 mainShipTakeDamage(mainShip);
             }
             for (int bulletIdx = bulletArray.size - 1; bulletIdx >= 0; bulletIdx--){
                 Bullet currentBullet = bulletArray.get(bulletIdx);
-                if (currentBullet.hitbox.overlaps(currentEnemy.hurtbox) && !currentEnemy.isInvulnerable) {
+                if (currentEnemy.hurtboxIntersectWithThisBullet(currentBullet) && !currentEnemy.isInvulnerable) {
                     currentEnemy.health -= currentBullet.damage;
                     bulletArray.removeIndex(bulletIdx);
                 }

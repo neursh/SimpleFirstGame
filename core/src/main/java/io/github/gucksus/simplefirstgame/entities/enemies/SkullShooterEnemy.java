@@ -2,23 +2,19 @@ package io.github.gucksus.simplefirstgame.entities.enemies;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import io.github.gucksus.simplefirstgame.entities.base.Enemy;
 import io.github.gucksus.simplefirstgame.entities.base.EnemyBullet;
 import io.github.gucksus.simplefirstgame.entities.bullets.SkullShooterBullet;
+import io.github.gucksus.simplefirstgame.tools.BoxWithOffset;
 
 public class SkullShooterEnemy extends Enemy {
     public SkullShooterEnemy(TextureRegion staticTexture, Texture bulletTexture, float iniX, float iniY) {
         super(staticTexture , iniX, iniY, 4, 4);
         health = 5f;
-        hitboxOffsetX = width / textureSizeX * 27;
-        hitboxOffsetY = height / textureSizeY * 26;
-        shootPointOffsetX = width / textureSizeX * 32;
-        shootPointOffsetY = height / textureSizeY * 22;
-        hurtboxOffsetX = width / textureSizeX * 23;
-        hurtboxOffsetY = height / textureSizeY * 25;
-        hitbox = new Rectangle(iniX + hitboxOffsetX, iniY + hitboxOffsetY, width / 64f * 10, height / 64 * 16);
-        hurtbox = new Rectangle(iniX + hurtboxOffsetX, iniY + hurtboxOffsetY, width / 64f * 18, height / 64 * 20);
+        shootPointsOffsets.add(new Vector2(pixelLengthX * 32, pixelLengthY * 22));
+        hitboxes.add(new BoxWithOffset(iniX, iniY, pixelLengthX * 10, pixelLengthY * 16, pixelLengthX * 27, pixelLengthY * 26));
+        hurtboxes.add(new BoxWithOffset(iniX, iniY, pixelLengthX * 18, pixelLengthY * 20, pixelLengthX * 23, pixelLengthY * 25));
         this.bulletTexture = bulletTexture;
         animationInterval = 1;
         shootAnimationRepeat = 15;
