@@ -58,7 +58,7 @@ public class Level1 extends Level {
         Wave A2 = waveArray.peek();
         addPopcornEnemiesIntoWave(A1);
         addPopcornEnemiesIntoWave(A2);
-        System.out.println(examplePopcornEnemy.deathAnimationFrameNum);
+        System.out.println(examplePopcornEnemy.getDeathAnimationFrameNum());
         A1.moveAllEnemyStraightAfterXSeconds(3f - examplePopcornEnemy.width / 2, 1.5f, 3, delta, 0);
         A2.moveAllEnemyStraightAfterXSeconds(5f - examplePopcornEnemy.width / 2, 1.5f, 3, delta, 0);
         A1.moveAllEnemyStraightAfterXSeconds(A1.startX, 11, 2.5f, delta, 3);

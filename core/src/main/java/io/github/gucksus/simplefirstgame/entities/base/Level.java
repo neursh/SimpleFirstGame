@@ -12,15 +12,15 @@ import io.github.gucksus.simplefirstgame.waves.Wave;
 
 
 public abstract class Level {
-    public boolean isLevelCompleted = false;
+    protected boolean isLevelCompleted = false;
     protected boolean debugMode = false;
-    public float lvTimer = 0;
+    protected float lvTimer = 0;
     DebugRenderer debugRenderer;
-    public Array<Enemy> activeEnemies;
-    public Array<Wave> waveArray;
-    public boolean isLevelStarted;
-    public float delta;
-    public Array<EnemyBullet> enemyBulletArray;
+    protected Array<Enemy> activeEnemies;
+    protected Array<Wave> waveArray;
+    protected boolean isLevelStarted;
+    protected float delta;
+    protected Array<EnemyBullet> enemyBulletArray;
     public Array<Bullet> bulletArray;
 
     public Level() {

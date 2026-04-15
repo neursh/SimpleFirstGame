@@ -16,12 +16,12 @@ import io.github.gucksus.simplefirstgame.tools.BoxWithOffset;
  * <b><i>SET THESE VARIABLES AS 0 IF THE ENEMY DOES NOT HAVE SHOOT OR/AND DEATH ANIMATION: shootAnimationFrameNum, deathAnimationFrameNum.</i></b>
  */
 public abstract class Enemy {
-    public float health;
-    public Sprite sprite;
-    public Array<BoxWithOffset> hitboxes;
-    public Array<BoxWithOffset> hurtboxes;
-    public float width;
-    public float height;
+    protected float health;
+    protected Sprite sprite;
+    protected Array<BoxWithOffset> hitboxes;
+    protected Array<BoxWithOffset> hurtboxes;
+    protected float width;
+    protected float height;
     protected Array<Vector2> shootPointsOffsets;
     protected int textureSizeX;
     protected int textureSizeY;
@@ -29,14 +29,14 @@ public abstract class Enemy {
     protected float pixelLengthY;
     protected float shootFrameInterval = 0.1f;
     protected float deathFrameInterval = 0.1f;
-    public boolean isDead = false;
+    protected boolean isDead = false;
     public boolean isMoving;
-    public boolean isInvulnerable;
-    public boolean isInvisible;
-    public boolean previouslyInScreen;
-    public boolean isHarmless;
-    boolean shootInThisAnimation;
-    public int numberOfTimeAllowedOnScreenLeft = 1;
+    protected boolean isInvulnerable;
+    protected boolean isInvisible;
+    protected boolean previouslyInScreen;
+    protected boolean isHarmless;
+    protected boolean shootInThisAnimation;
+    protected int numberOfTimeAllowedOnScreenLeft = 1;
     /**
      * The X difference/distance of each frame compared to the previous frame. So in each frame, this amount is added to make the enemy move. Thus, all enemies move at a constant speed.
      */
@@ -50,7 +50,7 @@ public abstract class Enemy {
     protected Texture bulletTexture;
 
     protected Animation<TextureRegion> shootAnimation;
-    public Animation<TextureRegion> deathAnimation;
+    protected Animation<TextureRegion> deathAnimation;
     protected int shootAnimationFrameNum;
     /**
      * The number of time that the enemy is allowed to shoot.
@@ -61,8 +61,8 @@ public abstract class Enemy {
      */
     float animationIntervalTimer;
     protected float animationInterval;
-    public int deathAnimationFrameNum;
-    public float stateTime;
+    protected int deathAnimationFrameNum;
+    protected float stateTime;
     enum AnimationType {Static, Shoot, Death}
     AnimationType currentAnimationType = AnimationType.Static;
 
@@ -261,5 +261,17 @@ public abstract class Enemy {
                 return true;
         }
         return false;
+    }
+
+    public boolean getIsDead() {
+        return isDead;
+    }
+
+    public int getNumberOfTimeAllowedOnScreenLeft() {
+        return numberOfTimeAllowedOnScreenLeft;
+    }
+
+    public int getDeathAnimationFrameNum() {
+        return deathAnimationFrameNum;
     }
 }

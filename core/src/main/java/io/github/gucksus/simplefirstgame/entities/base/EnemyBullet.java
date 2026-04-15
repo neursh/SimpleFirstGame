@@ -18,7 +18,7 @@ public abstract class EnemyBullet {
     float height;
     float timer;
     float damage = 1;
-    public Sprite sprite;
+    protected Sprite sprite;
     Rectangle rectangleHitbox;
     float rectangleHitboxOffsetX;
     float rectangleHitboxOffsetY;
@@ -32,7 +32,7 @@ public abstract class EnemyBullet {
         Roundabout
     }
     protected MovingType movingType;
-    public Vector2 direction;
+    protected Vector2 direction;
 
     public EnemyBullet (Texture texture, float iniX, float iniY, float width, float height, float dx, float dy) {
         this.width = width;

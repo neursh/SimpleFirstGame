@@ -50,7 +50,7 @@ public class Wave {
         }
         for (int i = waveEnemyArray.size - 1; i >= 0; --i) {
             Enemy enemy = waveEnemyArray.get(i);
-            if (enemy.isDead && enemy.isDeathAnimationFinished()){ // If the enemy is dead and finished death animation.
+            if (enemy.getIsDead() && enemy.isDeathAnimationFinished()){ // If the enemy is dead and finished death animation.
                 activeEnemyArray.removeValue(enemy, true);
             }
         }
@@ -63,7 +63,7 @@ public class Wave {
      */
     public boolean waveUpdateRemoval(float worldWidth, float worldHeight) {
         for (Enemy enemy: waveEnemyArray) {
-            if (enemy.numberOfTimeAllowedOnScreenLeft > 0 || enemy.isInScreenThisFrame(worldWidth, worldHeight)){
+            if (enemy.getNumberOfTimeAllowedOnScreenLeft() > 0 || enemy.isInScreenThisFrame(worldWidth, worldHeight)){
                 return false;
             }
         }
