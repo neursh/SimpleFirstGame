@@ -88,6 +88,7 @@ public class Wave {
         float lastStartY = startY;
         startX = endX;
         startY = endY;
+        previousDuration = duration;
         for (int i = 0; i < waveEnemyArray.size; i++) {
             final int idx = i;
             Timer.schedule(new Timer.Task() {
@@ -101,6 +102,29 @@ public class Wave {
                 }
             }, X + i * interval);
         }
+        stopAllEnemyMovementAfterXSeconds(duration);
+    }
+
+    public void moveAllEnemyStraightAfterPreviousDuration(float endX, float endY, float duration, float delta) {
+        float lastStartX = startX;
+        float lastStartY = startY;
+        startX = endX;
+        startY = endY;
+        for (int i = 0; i < waveEnemyArray.size; i++) {
+            final int idx = i;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    Enemy enemy = waveEnemyArray.get(idx);
+                    enemy.isMoving = true;
+                    enemy.currentMovingType = Enemy.movingType.Straight;
+                    enemy.nextFrameXDifference = (endX - lastStartX) / duration * delta;
+                    enemy.nextFrameYDifference = (endY - lastStartY) / duration * delta;
+                    System.out.println(previousDuration);
+                }
+            }, previousDuration + i * interval);
+        }
+        previousDuration = duration;
         stopAllEnemyMovementAfterXSeconds(duration);
     }
 
