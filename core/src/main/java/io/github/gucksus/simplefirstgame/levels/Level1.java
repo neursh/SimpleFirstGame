@@ -2,6 +2,7 @@ package io.github.gucksus.simplefirstgame.levels;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import io.github.gucksus.simplefirstgame.entities.base.Enemy;
 import io.github.gucksus.simplefirstgame.entities.base.Level;
@@ -92,17 +93,10 @@ public class Level1 extends Level {
 //        Wave A1 = waveArray.peek();
 //        addSkullShooterIntoWave(A1);
 //        A1.moveAllEnemyStraightAfterXSeconds(1, 7, 1, delta, 0);
-        addNewWave(14, .1f, -3, 9.5f);
-        addNewWave(14, .1f, -1, 9.5f);
+        addNewWave(30, .01f, 6, 6);
         Wave A1 = waveArray.first();
-        Wave A2 = waveArray.peek();
         addPopcornEnemiesIntoWave(A1);
-        addPopcornEnemiesIntoWave(A2);
-        System.out.println(examplePopcornEnemy.getDeathAnimationFrameNum());
-        A1.moveAllEnemyStraightAfterXSeconds(3f - examplePopcornEnemy.getWidth() / 2, 1.5f, .5f, delta, 0);
-        A2.moveAllEnemyStraightAfterXSeconds(5f - examplePopcornEnemy.getWidth() / 2, 1.5f, .5f, delta, 0);
-        A1.moveAllEnemyStraightAfterPreviousDuration(A1.startX, 11, .01f, delta);
-        A2.moveAllEnemyStraightAfterPreviousDuration(A2.startX, 11, .01f, delta);
+        A1.moveAllEnemyInCircleAfterXSeconds(new Vector2(5, 5), 3, 3, 0, false, delta);
     }
 
     public void dispose() {

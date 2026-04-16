@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import io.github.gucksus.simplefirstgame.entities.MainShip;
@@ -46,6 +47,8 @@ public abstract class Enemy {
      * The Y difference/distance of each frame compared to the previous frame. So in each frame, this amount is added to make the enemy move. Thus, all enemies move at a constant speed.
      */
     public float nextFrameYDifference;
+    public float nextFrameAngleDifference;
+    public float angle;
 
     protected Animation<TextureRegion> shootAnimation;
     protected Animation<TextureRegion> deathAnimation;
@@ -89,6 +92,24 @@ public abstract class Enemy {
         deathAnimation = new Animation<>(deathFrameInterval, deathAnimationFrames);
         this.deathAnimationFrameNum = deathAnimationFrames.length;
         stateTime = 0;
+    }
+
+    public void moveStraight() {
+        if (isMoving) {
+            sprite.translate(nextFrameXDifference, nextFrameYDifference);
+            updateEnemyHitboxAndHurtboxWhenMoved();
+        }
+    }
+
+    public void moveCircle(Vector2 centerPoint , float radius) {
+        if (isMoving) {
+            angle += nextFrameAngleDifference;
+            Vector2 nextPoint = new Vector2();
+            nextPoint.x = centerPoint.x + radius * MathUtils.cos(angle);
+            nextPoint.y = centerPoint.y + radius * MathUtils.sin(angle);
+            sprite.setCenter(nextPoint.x, nextPoint.y);
+            updateEnemyHitboxAndHurtboxWhenMoved();
+        }
     }
 
     public void updateEnemyHitboxAndHurtboxWhenMoved() {

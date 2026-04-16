@@ -1,5 +1,7 @@
 package io.github.gucksus.simplefirstgame.waves;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
@@ -23,7 +25,7 @@ public class Wave {
     public float startY;
     public boolean isDone;
     Vector2 centerPoint;
-    float revolution;
+    float radius;
     float previousDuration;
     public movingType currentMovingType;
     public enum movingType {Straight, Circle}
@@ -80,17 +82,23 @@ public class Wave {
     public void updatePosition(float delta) {
         switch (currentMovingType) {
             case Straight:
-                moveStraight();
+                moveEnemyStraight();
                 break;
             case Circle:
+                moveCircle(delta);
                 break;
         }
     }
 
-    void moveStraight() {
-        for(Enemy enemy: waveEnemyArray) if (enemy.isMoving) {
-            enemy.sprite.translate(enemy.nextFrameXDifference, enemy.nextFrameYDifference);
-            enemy.updateEnemyHitboxAndHurtboxWhenMoved();
+    void moveEnemyStraight() {
+        for(Enemy enemy: waveEnemyArray) {
+            enemy.moveStraight();
+        }
+    }
+
+    void moveCircle(float delta) {
+        for(Enemy enemy: waveEnemyArray) {
+            enemy.moveCircle(centerPoint, radius);
         }
     }
 
@@ -144,10 +152,21 @@ public class Wave {
             }, previousDuration + i * interval);
         }
         previousDuration = duration;
-//        stopAllEnemyMovementAfterXSeconds(duration);
+        stopAllEnemyMovementAfterXSeconds(duration);
     }
 
-    public void moveAllEnemyInCircleAfterXSeconds(Vector2 center, float revolutionNum, float duration, float X, boolean clockwise) {
+    public void moveAllEnemyInCircleAfterXSeconds(Vector2 center, float revolutionNum, float duration, float X, boolean counterClockwise, float delta) {
+        float clockwiseMultiplier;
+        if (counterClockwise)
+            clockwiseMultiplier = 1;
+        else
+            clockwiseMultiplier = -1;
+
+        this.centerPoint = center;
+        Enemy firstEnemy = waveEnemyArray.first();
+        Vector2 firstEnemyToCenter = new Vector2(firstEnemy.sprite.getX() - center.x, firstEnemy.sprite.getY() - center.y);
+        radius = firstEnemyToCenter.len();
+
         for (int i = 0; i < waveEnemyArray.size; i++) {
             final int idx = i;
             Timer.schedule(new Timer.Task() {
@@ -155,18 +174,29 @@ public class Wave {
                 public void run() {
                     Enemy enemy = waveEnemyArray.get(idx);
                     enemy.isMoving = true;
+                    currentMovingType = movingType.Circle;
+                    enemy.nextFrameAngleDifference = clockwiseMultiplier * (revolutionNum * MathUtils.PI2 / duration * delta);
                 }
             }, X + i * interval);
         }
+        previousDuration = duration;
+        stopAllEnemyMovementAfterXSeconds(duration);
     }
 
     public void stopAllEnemyMovementAfterXSeconds(float X) {
-        com.badlogic.gdx.graphics.g2d.Sprite sprite = waveEnemyArray.first().getSprite();
+        Sprite sprite = waveEnemyArray.first().getSprite();
         startX = sprite.getX();
         startY = sprite.getY();
-        for (int i = 0; i < waveEnemyArray.size; i++) {
-            Enemy enemy = waveEnemyArray.get(i);
-            enemy.isMoving = false;
-        }
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                for (int i = 0; i < waveEnemyArray.size; i++) {
+                    Enemy enemy = waveEnemyArray.get(i);
+                    enemy.isMoving = false;
+                    enemy.angle = 0;
+                    System.out.println(1);
+                }
+            }
+        }, X);
     }
 }
