@@ -25,6 +25,8 @@ public class Wave {
     Vector2 centerPoint;
     float revolution;
     float previousDuration;
+    public movingType currentMovingType;
+    public enum movingType {Straight, Circle}
 
     /**
      * Create a new wave of enemy.
@@ -41,6 +43,7 @@ public class Wave {
         this.interval = interval;
         this.startX = startX;
         this.startY = startY;
+        currentMovingType = movingType.Straight;
     }
 
     /**
@@ -74,6 +77,23 @@ public class Wave {
         return true;
     }
 
+    public void updatePosition(float delta) {
+        switch (currentMovingType) {
+            case Straight:
+                moveStraight();
+                break;
+            case Circle:
+                break;
+        }
+    }
+
+    void moveStraight() {
+        for(Enemy enemy: waveEnemyArray) if (enemy.isMoving) {
+            enemy.sprite.translate(enemy.nextFrameXDifference, enemy.nextFrameYDifference);
+            enemy.updateEnemyHitboxAndHurtboxWhenMoved();
+        }
+    }
+
     /**
      * This method updates enemies' next frame X and Y difference so that they can reach the destination in time.
      * @param endX The destination's X coordinate.
@@ -96,7 +116,7 @@ public class Wave {
                 public void run() {
                     Enemy enemy = waveEnemyArray.get(idx);
                     enemy.isMoving = true;
-                    enemy.currentMovingType = Enemy.movingType.Straight;
+                    currentMovingType = movingType.Straight;
                     enemy.nextFrameXDifference = (endX - lastStartX) / duration * delta;
                     enemy.nextFrameYDifference = (endY - lastStartY) / duration * delta;
                 }
@@ -117,15 +137,14 @@ public class Wave {
                 public void run() {
                     Enemy enemy = waveEnemyArray.get(idx);
                     enemy.isMoving = true;
-                    enemy.currentMovingType = Enemy.movingType.Straight;
+                    currentMovingType = movingType.Straight;
                     enemy.nextFrameXDifference = (endX - lastStartX) / duration * delta;
                     enemy.nextFrameYDifference = (endY - lastStartY) / duration * delta;
-                    System.out.println(previousDuration);
                 }
             }, previousDuration + i * interval);
         }
         previousDuration = duration;
-        stopAllEnemyMovementAfterXSeconds(duration);
+//        stopAllEnemyMovementAfterXSeconds(duration);
     }
 
     public void moveAllEnemyInCircleAfterXSeconds(Vector2 center, float revolutionNum, float duration, float X, boolean clockwise) {
@@ -136,7 +155,6 @@ public class Wave {
                 public void run() {
                     Enemy enemy = waveEnemyArray.get(idx);
                     enemy.isMoving = true;
-                    enemy.currentMovingType = Enemy.movingType.Circle;
                 }
             }, X + i * interval);
         }
@@ -149,14 +167,6 @@ public class Wave {
         for (int i = 0; i < waveEnemyArray.size; i++) {
             Enemy enemy = waveEnemyArray.get(i);
             enemy.isMoving = false;
-            enemy.nextFrameXDifference = 0;
-            enemy.nextFrameYDifference = 0;
-        }
-    }
-
-    public void updateEnemyMovingStatus(float delta) {
-        for (Enemy enemy: waveEnemyArray) {
-            enemy.updatePosition(delta);
         }
     }
 }

@@ -22,7 +22,7 @@ public class Level1 extends Level {
         skullBulletTexture = new Texture("Bullet/skull_bullet_texture.png");
         TextureRegion staticPopcornTexture = new TextureRegion(popcornEnemyTexture);
         examplePopcornEnemy = new PopcornEnemy(staticPopcornTexture, 67, 67);
-        debugMode = false;
+        debugMode = true;
     }
 
     private void addNewWave(int totalEnemy, float interval, float startX, float startY) {
@@ -59,8 +59,8 @@ public class Level1 extends Level {
         addPopcornEnemiesIntoWave(A1);
         addPopcornEnemiesIntoWave(A2);
         System.out.println(examplePopcornEnemy.getDeathAnimationFrameNum());
-        A1.moveAllEnemyStraightAfterXSeconds(3f - examplePopcornEnemy.getWidth() / 2, 1.5f, .2f, delta, 0);
-        A2.moveAllEnemyStraightAfterXSeconds(5f - examplePopcornEnemy.getWidth() / 2, 1.5f, .2f, delta, 0);
+        A1.moveAllEnemyStraightAfterXSeconds(3f - examplePopcornEnemy.getWidth() / 2, 1.5f, 1f, delta, 0);
+        A2.moveAllEnemyStraightAfterXSeconds(5f - examplePopcornEnemy.getWidth() / 2, 1.5f, 1f, delta, 0);
         A1.moveAllEnemyStraightAfterPreviousDuration(A1.startX, 11, .01f, delta);
         A2.moveAllEnemyStraightAfterPreviousDuration(A2.startX, 11, .01f, delta);
 
@@ -88,9 +88,21 @@ public class Level1 extends Level {
 
     @Override
     public void enemySpawnDebug(float worldWidth, float worldHeight) {
-        addNewWave(1, 0, 3, 3);
-        Wave A1 = waveArray.peek();
-        addSkullShooterIntoWave(A1);
+//        addNewWave(1, 0, 3, 3);
+//        Wave A1 = waveArray.peek();
+//        addSkullShooterIntoWave(A1);
+//        A1.moveAllEnemyStraightAfterXSeconds(1, 7, 1, delta, 0);
+        addNewWave(14, .1f, -3, 9.5f);
+        addNewWave(14, .1f, -1, 9.5f);
+        Wave A1 = waveArray.first();
+        Wave A2 = waveArray.peek();
+        addPopcornEnemiesIntoWave(A1);
+        addPopcornEnemiesIntoWave(A2);
+        System.out.println(examplePopcornEnemy.getDeathAnimationFrameNum());
+        A1.moveAllEnemyStraightAfterXSeconds(3f - examplePopcornEnemy.getWidth() / 2, 1.5f, .5f, delta, 0);
+        A2.moveAllEnemyStraightAfterXSeconds(5f - examplePopcornEnemy.getWidth() / 2, 1.5f, .5f, delta, 0);
+        A1.moveAllEnemyStraightAfterPreviousDuration(A1.startX, 11, .01f, delta);
+        A2.moveAllEnemyStraightAfterPreviousDuration(A2.startX, 11, .01f, delta);
     }
 
     public void dispose() {

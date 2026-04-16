@@ -86,7 +86,7 @@ public abstract class Level {
                 continue;
             }
             wave.enemyUpdateRemoval(worldWidth, worldHeight);
-            wave.updateEnemyMovingStatus(delta);
+            wave.updatePosition(delta);
             if (wave.waveUpdateRemoval(worldWidth, worldHeight)) {
                 for (Enemy enemy: wave.waveEnemyArray) {
                     activeEnemies.removeValue(enemy, true);

@@ -17,7 +17,7 @@ import io.github.gucksus.simplefirstgame.tools.BoxWithOffset;
  */
 public abstract class Enemy {
     protected float health;
-    protected Sprite sprite;
+    public Sprite sprite;
     protected Array<BoxWithOffset> hitboxes;
     protected Array<BoxWithOffset> hurtboxes;
     protected float width;
@@ -37,6 +37,7 @@ public abstract class Enemy {
     protected boolean isHarmless;
     protected boolean shootInThisAnimation;
     protected int numberOfTimeAllowedOnScreenLeft = 1;
+    protected Texture bulletTexture;
     /**
      * The X difference/distance of each frame compared to the previous frame. So in each frame, this amount is added to make the enemy move. Thus, all enemies move at a constant speed.
      */
@@ -45,9 +46,6 @@ public abstract class Enemy {
      * The Y difference/distance of each frame compared to the previous frame. So in each frame, this amount is added to make the enemy move. Thus, all enemies move at a constant speed.
      */
     public float nextFrameYDifference;
-    public movingType currentMovingType;
-    public enum movingType {Straight, Circle}
-    protected Texture bulletTexture;
 
     protected Animation<TextureRegion> shootAnimation;
     protected Animation<TextureRegion> deathAnimation;
@@ -76,7 +74,6 @@ public abstract class Enemy {
         sprite = new Sprite(staticTexture);
         sprite.setSize(width, height);
         sprite.setPosition(iniX, iniY);
-        currentMovingType = movingType.Straight;
         hitboxes = new Array<>();
         hurtboxes = new Array<>();
         shootPointsOffsets = new Array<>();
@@ -92,23 +89,6 @@ public abstract class Enemy {
         deathAnimation = new Animation<>(deathFrameInterval, deathAnimationFrames);
         this.deathAnimationFrameNum = deathAnimationFrames.length;
         stateTime = 0;
-    }
-
-    public void updatePosition(float delta) {
-        if (!isMoving)
-            return;
-        switch (currentMovingType) {
-            case Straight:
-                moveStraight();
-                break;
-            case Circle:
-                break;
-        }
-    }
-
-    public void moveStraight() {
-        sprite.translate(nextFrameXDifference, nextFrameYDifference);
-        updateEnemyHitboxAndHurtboxWhenMoved();
     }
 
     public void updateEnemyHitboxAndHurtboxWhenMoved() {
