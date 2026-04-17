@@ -67,20 +67,6 @@ public class Wave {
         }
     }
 
-    /**
-     * @param worldWidth The width of the world.
-     * @param worldHeight The height of the world.
-     * @return Whether a wave is good to be removed or not.
-     */
-    public boolean waveUpdateRemoval(float worldWidth, float worldHeight) {
-        for (Enemy enemy: waveEnemyArray) {
-            if (enemy.getNumberOfTimeAllowedOnScreenLeft() > 0 || enemy.isInScreenThisFrame(worldWidth, worldHeight)){
-                return false;
-            }
-        }
-        return true;
-    }
-
     public void updatePosition(float delta) {
         switch (currentMovingType) {
             case Straight:
@@ -102,10 +88,6 @@ public class Wave {
         enemyUpdateRemoval(worldWidth, worldHeight);
         updateCenterPoint();
         updatePosition(delta);
-
-        if (waveUpdateRemoval(worldWidth, worldHeight)) {
-            isDone = true;
-        }
     }
 
     void moveEnemyStraight() {
@@ -248,6 +230,38 @@ public class Wave {
                     enemy.angle = 0;
                 }
             }, X + i * interval);
+        }
+    }
+
+    public void removeEnemyOneByOne(float X) {
+        int initialWaveSize = waveEnemyArray.size;
+        for (int i = 0; i < waveEnemyArray.size; i++) {
+            final int idx = i;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    Enemy enemy = waveEnemyArray.get(idx);
+                    activeEnemyArray.removeValue(enemy, true);
+                    if (idx == initialWaveSize - 1)
+                        isDone = true;
+                }
+            }, X + i * interval);
+        }
+    }
+
+    public void removeEnemyOneByOne() {
+        int initialWaveSize = waveEnemyArray.size;
+        for (int i = 0; i < waveEnemyArray.size; i++) {
+            final int idx = i;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    Enemy enemy = waveEnemyArray.get(idx);
+                    activeEnemyArray.removeValue(enemy, true);
+                    if (idx == initialWaveSize - 1)
+                        isDone = true;
+                }
+            }, previousDuration + i * interval);
         }
     }
 

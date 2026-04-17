@@ -34,10 +34,8 @@ public abstract class Enemy {
     public boolean isMoving;
     protected boolean isInvulnerable;
     protected boolean isInvisible;
-    protected boolean previouslyInScreen;
     protected boolean isHarmless;
     protected boolean shootInThisAnimation;
-    protected int numberOfTimeAllowedOnScreenLeft = 1;
     protected Texture bulletTexture;
     /**
      * The X difference/distance of each frame compared to the previous frame. So in each frame, this amount is added to make the enemy move. Thus, all enemies move at a constant speed.
@@ -149,15 +147,6 @@ public abstract class Enemy {
             isHarmless = true;
             triggerDeathAnimation();
         }
-        if (isInScreenThisFrame(worldWidth, worldHeight) && !previouslyInScreen) {
-            numberOfTimeAllowedOnScreenLeft--;
-            previouslyInScreen = true;
-        } else if (!isInScreenThisFrame(worldWidth, worldHeight) && previouslyInScreen) {
-            previouslyInScreen = false;
-        }
-        if (numberOfTimeAllowedOnScreenLeft == 0 && !isInScreenThisFrame(worldWidth, worldHeight) && !isInvulnerable) {
-            isInvulnerable = true;
-        }
     }
 
     public void triggerShootAnimation() {
@@ -268,10 +257,6 @@ public abstract class Enemy {
 
     public boolean getIsDead() {
         return isDead;
-    }
-
-    public int getNumberOfTimeAllowedOnScreenLeft() {
-        return numberOfTimeAllowedOnScreenLeft;
     }
 
     public float getWidth() {

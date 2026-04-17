@@ -83,9 +83,6 @@ public abstract class Level {
             Wave wave = waveArray.get(i);
             wave.update(delta, worldWidth, worldHeight);
             if (wave.isDone) {
-                for (Enemy enemy: wave.waveEnemyArray) {
-                    activeEnemies.removeValue(enemy, true);
-                }
                 waveArray.removeIndex(i);
             }
         }
