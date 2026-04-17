@@ -81,13 +81,8 @@ public abstract class Level {
     public void wavesUpdate(float delta, float worldWidth, float worldHeight) {
         for (int i = waveArray.size - 1; i >= 0; i--) {
             Wave wave = waveArray.get(i);
+            wave.update(delta, worldWidth, worldHeight);
             if (wave.isDone) {
-                waveArray.removeIndex(i);
-                continue;
-            }
-            wave.enemyUpdateRemoval(worldWidth, worldHeight);
-            wave.updatePosition(delta);
-            if (wave.waveUpdateRemoval(worldWidth, worldHeight)) {
                 for (Enemy enemy: wave.waveEnemyArray) {
                     activeEnemies.removeValue(enemy, true);
                 }

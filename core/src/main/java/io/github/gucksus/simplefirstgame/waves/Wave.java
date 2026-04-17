@@ -25,6 +25,7 @@ public class Wave {
     public float startY;
     public boolean isDone;
     Vector2 centerPoint;
+    Enemy centerEnemy;
     float radius;
     float previousDuration;
     public movingType currentMovingType;
@@ -46,6 +47,7 @@ public class Wave {
         this.startX = startX;
         this.startY = startY;
         currentMovingType = movingType.Straight;
+        centerPoint = new Vector2();
     }
 
     /**
@@ -90,6 +92,22 @@ public class Wave {
         }
     }
 
+    void updateCenterPoint() {
+        if (centerEnemy != null) {
+            centerPoint = centerEnemy.getCenter();
+        }
+    }
+
+    public void update(float delta, float worldWidth, float worldHeight) {
+        enemyUpdateRemoval(worldWidth, worldHeight);
+        updateCenterPoint();
+        updatePosition(delta);
+
+        if (waveUpdateRemoval(worldWidth, worldHeight)) {
+            isDone = true;
+        }
+    }
+
     void moveEnemyStraight() {
         for(Enemy enemy: waveEnemyArray) {
             enemy.moveStraight();
@@ -116,7 +134,7 @@ public class Wave {
         float lastStartY = startY;
         startX = endX;
         startY = endY;
-        previousDuration = duration;
+        previousDuration += duration;
         for (int i = 0; i < waveEnemyArray.size; i++) {
             final int idx = i;
             Timer.schedule(new Timer.Task() {
@@ -127,10 +145,11 @@ public class Wave {
                     currentMovingType = movingType.Straight;
                     enemy.nextFrameXDifference = (endX - lastStartX) / duration * delta;
                     enemy.nextFrameYDifference = (endY - lastStartY) / duration * delta;
+                    if (idx == waveEnemyArray.size - 1)
+                        updateStartPoint();
                 }
             }, X + i * interval);
         }
-        stopAllEnemyMovementAfterXSeconds(duration);
     }
 
     public void moveAllEnemyStraightAfterPreviousDuration(float endX, float endY, float duration, float delta) {
@@ -148,11 +167,12 @@ public class Wave {
                     currentMovingType = movingType.Straight;
                     enemy.nextFrameXDifference = (endX - lastStartX) / duration * delta;
                     enemy.nextFrameYDifference = (endY - lastStartY) / duration * delta;
+                    if (idx == waveEnemyArray.size - 1)
+                        updateStartPoint();
                 }
             }, previousDuration + i * interval);
         }
-        previousDuration = duration;
-        stopAllEnemyMovementAfterXSeconds(duration);
+        previousDuration += duration;
     }
 
     public void moveAllEnemyInCircleAfterXSeconds(Vector2 center, float revolutionNum, float duration, float X, boolean counterClockwise, float delta) {
@@ -176,27 +196,64 @@ public class Wave {
                     enemy.isMoving = true;
                     currentMovingType = movingType.Circle;
                     enemy.nextFrameAngleDifference = clockwiseMultiplier * (revolutionNum * MathUtils.PI2 / duration * delta);
+                    if (idx == waveEnemyArray.size - 1)
+                        updateStartPoint();
                 }
             }, X + i * interval);
         }
-        previousDuration = duration;
-        stopAllEnemyMovementAfterXSeconds(duration);
+        previousDuration += duration;
+    }
+
+    public void moveAllEnemyInCircleAfterXSeconds(Enemy center, float revolutionNum, float duration, float X, boolean counterClockwise, float delta) {
+        float clockwiseMultiplier;
+        if (counterClockwise)
+            clockwiseMultiplier = 1;
+        else
+            clockwiseMultiplier = -1;
+
+        centerEnemy = center;
+        centerPoint = centerEnemy.getCenter();
+        Enemy firstEnemy = waveEnemyArray.first();
+        Vector2 firstEnemyToCenter = new Vector2(firstEnemy.sprite.getX() - centerPoint.x, firstEnemy.sprite.getY() - centerPoint.y);
+        radius = firstEnemyToCenter.len();
+
+        for (int i = 0; i < waveEnemyArray.size; i++) {
+            final int idx = i;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    Enemy enemy = waveEnemyArray.get(idx);
+                    enemy.isMoving = true;
+                    currentMovingType = movingType.Circle;
+                    enemy.nextFrameAngleDifference = clockwiseMultiplier * (revolutionNum * MathUtils.PI2 / duration * delta);
+                    if (idx == waveEnemyArray.size - 1)
+                        updateStartPoint();
+                }
+            }, X + i * interval);
+        }
+        previousDuration += duration;
     }
 
     public void stopAllEnemyMovementAfterXSeconds(float X) {
-        Sprite sprite = waveEnemyArray.first().getSprite();
+        Sprite sprite = waveEnemyArray.first().sprite;
         startX = sprite.getX();
         startY = sprite.getY();
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                for (int i = 0; i < waveEnemyArray.size; i++) {
-                    Enemy enemy = waveEnemyArray.get(i);
+        for (int i = 0; i < waveEnemyArray.size; i++) {
+            final int idx = i;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    Enemy enemy = waveEnemyArray.get(idx);
                     enemy.isMoving = false;
                     enemy.angle = 0;
-                    System.out.println(1);
                 }
-            }
-        }, X);
+            }, X + i * interval);
+        }
+    }
+
+    void updateStartPoint() {
+        Sprite sprite = waveEnemyArray.first().sprite;
+        startX = sprite.getX();
+        startY = sprite.getY();
     }
 }

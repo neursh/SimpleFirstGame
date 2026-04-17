@@ -274,10 +274,6 @@ public abstract class Enemy {
         return numberOfTimeAllowedOnScreenLeft;
     }
 
-    public int getDeathAnimationFrameNum() {
-        return deathAnimationFrameNum;
-    }
-
     public float getWidth() {
         return width;
     }
@@ -286,7 +282,7 @@ public abstract class Enemy {
         return height;
     }
 
-    public Sprite getSprite() {
-        return sprite;
+    public Vector2 getCenter() {
+        return new Vector2(sprite.getX() + width / 2, sprite.getY() + height / 2);
     }
 }

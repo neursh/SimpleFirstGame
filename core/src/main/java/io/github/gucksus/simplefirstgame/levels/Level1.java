@@ -59,11 +59,10 @@ public class Level1 extends Level {
         Wave A2 = waveArray.peek();
         addPopcornEnemiesIntoWave(A1);
         addPopcornEnemiesIntoWave(A2);
-        System.out.println(examplePopcornEnemy.getDeathAnimationFrameNum());
-        A1.moveAllEnemyStraightAfterXSeconds(3f - examplePopcornEnemy.getWidth() / 2, 1.5f, 1f, delta, 0);
-        A2.moveAllEnemyStraightAfterXSeconds(5f - examplePopcornEnemy.getWidth() / 2, 1.5f, 1f, delta, 0);
-        A1.moveAllEnemyStraightAfterPreviousDuration(A1.startX, 11, .01f, delta);
-        A2.moveAllEnemyStraightAfterPreviousDuration(A2.startX, 11, .01f, delta);
+        A1.moveAllEnemyStraightAfterXSeconds(3f - examplePopcornEnemy.getWidth() / 2, 1.5f, .5f, delta, 0);
+        A2.moveAllEnemyStraightAfterXSeconds(5f - examplePopcornEnemy.getWidth() / 2, 1.5f, .5f, delta, 0);
+        A1.moveAllEnemyStraightAfterPreviousDuration(A1.startX, 11, .11f, delta);
+        A2.moveAllEnemyStraightAfterPreviousDuration(A2.startX, 11, .11f, delta);
 
         Timer.schedule(new Timer.Task() {
             @Override
@@ -93,10 +92,17 @@ public class Level1 extends Level {
 //        Wave A1 = waveArray.peek();
 //        addSkullShooterIntoWave(A1);
 //        A1.moveAllEnemyStraightAfterXSeconds(1, 7, 1, delta, 0);
-        addNewWave(30, .01f, 6, 6);
+        addNewWave(30, .1f, 6, 6);
+        addNewWave(1, 0, 5, 5);
         Wave A1 = waveArray.first();
+        Wave A1Center = waveArray.peek();
         addPopcornEnemiesIntoWave(A1);
-        A1.moveAllEnemyInCircleAfterXSeconds(new Vector2(5, 5), 3, 3, 0, false, delta);
+        addSkullShooterIntoWave(A1Center);
+        A1Center.moveAllEnemyStraightAfterPreviousDuration(2, 2, 1, delta);
+        A1Center.moveAllEnemyStraightAfterPreviousDuration(5, 3, 2, delta);
+        A1Center.moveAllEnemyStraightAfterPreviousDuration(1, 5, 1, delta);
+        A1Center.stopAllEnemyMovementAfterXSeconds(4);
+        A1.moveAllEnemyInCircleAfterXSeconds(A1Center.waveEnemyArray.peek(), 99, 99, 0, false, delta);
     }
 
     public void dispose() {
