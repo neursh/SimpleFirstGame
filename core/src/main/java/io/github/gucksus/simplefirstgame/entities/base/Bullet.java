@@ -1,5 +1,6 @@
 package io.github.gucksus.simplefirstgame.entities.base;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
@@ -29,9 +30,9 @@ public abstract class Bullet {
 
     /**
      * Update the position of the sprite and also hitbox. Only move them up in a straight line.
-     * @param delta The delta time.
      */
-    public void update(float delta){
+    public void update(){
+        float delta = Gdx.graphics.getDeltaTime();
         sprite.translateY(delta * speed);
         hitbox.setPosition(sprite.getX() + hitboxOffsetX, sprite.getY());
     }
@@ -50,5 +51,9 @@ public abstract class Bullet {
 
     public float getFireRate() {
         return fireRate;
+    }
+
+    public Sprite getSprite() {
+        return sprite;
     }
 }

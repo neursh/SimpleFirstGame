@@ -1,5 +1,6 @@
 package io.github.gucksus.simplefirstgame.entities.base;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Circle;
@@ -56,7 +57,7 @@ public abstract class EnemyBullet {
 
     /**
      * This works based on 2D vector.
-     * @param delta The frame delta time.
+     * @param delta The frame lastDelta time.
      */
     public void updateStraight(float delta) {
         timer += delta;
@@ -65,7 +66,8 @@ public abstract class EnemyBullet {
         sprite.setCenterY(iniY + direction.y * distanceMultiplier * timer);
     }
 
-    public void update(float delta) {
+    public void update() {
+        float delta = Gdx.graphics.getDeltaTime();
         switch (movingType) {
             case Straight:
                 updateStraight(delta);

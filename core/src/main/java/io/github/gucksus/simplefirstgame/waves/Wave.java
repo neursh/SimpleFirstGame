@@ -1,5 +1,6 @@
 package io.github.gucksus.simplefirstgame.waves;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -30,6 +31,8 @@ public class Wave {
     float previousDuration;
     public movingType currentMovingType;
     public enum movingType {Straight, Circle}
+    float worldWidth;
+    float worldHeight;
 
     /**
      * Create a new wave of enemy.
@@ -39,7 +42,7 @@ public class Wave {
      * @param startX The initial X coordinate before a position update.
      * @param startY The initial Y coordinate before a position update.
      */
-    public Wave(Array<Enemy> activeEnemyArray, int totalEnemies, float interval, float startX, float startY) {
+    public Wave(Array<Enemy> activeEnemyArray, int totalEnemies, float interval, float startX, float startY, float worldWidth, float worldHeight) {
         this.activeEnemyArray = activeEnemyArray;
         waveEnemyArray = new Array<>();
         this.totalEnemies = totalEnemies;
@@ -48,17 +51,14 @@ public class Wave {
         this.startY = startY;
         currentMovingType = movingType.Straight;
         centerPoint = new Vector2();
+        this.worldWidth = worldWidth;
+        this.worldHeight = worldHeight;
     }
 
     /**
      * This method calls for enemies' status update. If the conditions are met, it will remove enemies from activeEnemyArray.
-     * @param worldWidth The width of the world.
-     * @param worldHeight The height of the world.
      */
-    public void enemyUpdateRemoval(float worldWidth, float worldHeight) {
-        for (Enemy enemy: waveEnemyArray) {
-            enemy.updateStatus(worldWidth, worldHeight);
-        }
+    public void enemyUpdateRemoval() {
         for (int i = waveEnemyArray.size - 1; i >= 0; --i) {
             Enemy enemy = waveEnemyArray.get(i);
             if (enemy.getIsDead() && enemy.isDeathAnimationFinished()){ // If the enemy is dead and finished death animation.
@@ -67,13 +67,14 @@ public class Wave {
         }
     }
 
-    public void updatePosition(float delta) {
+    public void updatePosition() {
+        float delta = Gdx.graphics.getDeltaTime();
         switch (currentMovingType) {
             case Straight:
                 moveEnemyStraight();
                 break;
             case Circle:
-                moveCircle(delta);
+                moveCircle();
                 break;
         }
     }
@@ -84,10 +85,10 @@ public class Wave {
         }
     }
 
-    public void update(float delta, float worldWidth, float worldHeight) {
-        enemyUpdateRemoval(worldWidth, worldHeight);
+    public void update() {
+        enemyUpdateRemoval();
         updateCenterPoint();
-        updatePosition(delta);
+        updatePosition();
     }
 
     void moveEnemyStraight() {
@@ -96,7 +97,8 @@ public class Wave {
         }
     }
 
-    void moveCircle(float delta) {
+    void moveCircle() {
+        float delta = Gdx.graphics.getDeltaTime();
         for(Enemy enemy: waveEnemyArray) {
             enemy.moveCircle(centerPoint, radius);
         }
@@ -107,7 +109,7 @@ public class Wave {
      * @param endX The destination's X coordinate.
      * @param endY The destination's Y coordinate.
      * @param duration The amount of time for the first enemy of the wave to reach the destination.
-     * @param delta The frame delta time.
+     * @param delta The frame lastDelta time.
      * @param X The amount of time to delay.
      */
     public void moveAllEnemyStraightAfterXSeconds(float endX, float endY, float duration, float delta, float X){

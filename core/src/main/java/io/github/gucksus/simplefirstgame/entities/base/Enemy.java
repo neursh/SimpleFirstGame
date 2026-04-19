@@ -1,5 +1,6 @@
 package io.github.gucksus.simplefirstgame.entities.base;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import io.github.gucksus.simplefirstgame.entities.MainShip;
 import io.github.gucksus.simplefirstgame.tools.BoxWithOffset;
+import io.github.gucksus.simplefirstgame.tools.DebugRenderer;
 
 /**
  * <b>YOU HAVE TO DECLARE THESE VARIABLE IN SUBCLASSES:</b> <i>health, hitboxOffsetX and hitboxOffsetY, hurtboxOffsetX and hurtboxOffsetY, shootPointOffsetX and shootPointOffsetY, hitbox, hurtbox, bulletTexture, animationIntervalTime, shootAnimationRepeat.</i> <br>
@@ -64,8 +66,14 @@ public abstract class Enemy {
     protected float stateTime;
     enum AnimationType {Static, Shoot, Death}
     AnimationType currentAnimationType = AnimationType.Static;
+    protected Array<EnemyBullet> enemyBulletArray;
+    SpriteBatch batch;
+    DebugRenderer debugRenderer;
+    MainShip mainShip;
+    float worldWidth;
+    float worldHeight;
 
-    public Enemy(TextureRegion staticTexture, float iniX, float iniY, float width, float height) {
+    public Enemy(TextureRegion staticTexture, float iniX, float iniY, float width, float height, float worldWidth, float worldHeight, MainShip mainShip, SpriteBatch batch, DebugRenderer debugRenderer) {
         this.width = width;
         this.height = height;
         textureSizeX = staticTexture.getRegionWidth();
@@ -78,6 +86,12 @@ public abstract class Enemy {
         hitboxes = new Array<>();
         hurtboxes = new Array<>();
         shootPointsOffsets = new Array<>();
+        enemyBulletArray = new Array<>();
+        this.batch = batch;
+        this.debugRenderer = debugRenderer;
+        this.mainShip = mainShip;
+        this.worldWidth = worldWidth;
+        this.worldHeight = worldHeight;
     }
 
     public void initializeShootAnimation(TextureRegion[] shootAnimationFrames) {
@@ -95,7 +109,6 @@ public abstract class Enemy {
     public void moveStraight() {
         if (isMoving) {
             sprite.translate(nextFrameXDifference, nextFrameYDifference);
-            updateEnemyHitboxAndHurtboxWhenMoved();
         }
     }
 
@@ -106,8 +119,14 @@ public abstract class Enemy {
             nextPoint.x = centerPoint.x + radius * MathUtils.cos(angle);
             nextPoint.y = centerPoint.y + radius * MathUtils.sin(angle);
             sprite.setCenter(nextPoint.x, nextPoint.y);
-            updateEnemyHitboxAndHurtboxWhenMoved();
         }
+    }
+
+    public void update() {
+        updateEnemyHitboxAndHurtboxWhenMoved();
+        addEnemyBulletUpdate();
+        updateStatus();
+        bulletUpdate();
     }
 
     public void updateEnemyHitboxAndHurtboxWhenMoved() {
@@ -119,15 +138,19 @@ public abstract class Enemy {
         }
     }
 
-    /**
-     * Method to check if the enemy is in the screen this frame or not.
-     * @param worldWidth The width of the world.
-     * @param worldHeight The height of the world.
-     * @return Whether the enemy is in the screen in this frame.
-     */
-    public boolean isInScreenThisFrame(float worldWidth, float worldHeight) {
-        return (sprite.getX() > -width && sprite.getX() < worldWidth && sprite.getY() > -height && sprite.getY() < worldHeight);
+    public void addEnemyBulletUpdate () {
+        EnemyBullet enemyBullet = shoot(mainShip);
+        if (enemyBullet != null) {
+            enemyBulletArray.add(enemyBullet);
+        }
     }
+
+    public void bulletUpdate() {
+        for (EnemyBullet enemyBullet: enemyBulletArray) {
+            enemyBullet.update();
+        }
+    }
+
 
     /**
      * <b>THIS METHOD NEEDS TO BE RUN EVERY FRAME.</b><br>
@@ -137,10 +160,8 @@ public abstract class Enemy {
      * <li>If the enemy is in screen this frame and if the enemy is in screen the last frame.</li>
      * <li>If the number of time the enemy is allowed on screen is equal to 0.</li>
      * </ol>
-     * @param worldWidth The width of the world.
-     * @param worldHeight The height of the world.
      */
-    public void updateStatus(float worldWidth, float worldHeight) {
+    public void updateStatus() {
         if (health <= 0 && currentAnimationType != AnimationType.Death) {
             isDead = true;
             isInvulnerable = true;
@@ -163,7 +184,17 @@ public abstract class Enemy {
         }
     }
 
-    public void draw(SpriteBatch batch, float delta) {
+    public void draw() {
+        drawAnimation();
+        drawBullet();
+    }
+
+    public void drawDebug() {
+        drawBulletDebug();
+    }
+
+    public void drawAnimation() {
+        float delta = Gdx.graphics.getDeltaTime();
         switch (currentAnimationType) {
             case Static:
                 sprite.draw(batch);
@@ -194,6 +225,22 @@ public abstract class Enemy {
                     TextureRegion currentFrame = deathAnimation.getKeyFrame(stateTime);
                     batch.draw(currentFrame, sprite.getX(), sprite.getY(), width, height);
                 }
+        }
+    }
+
+    void drawBullet() {
+        for (EnemyBullet enemyBullet: enemyBulletArray) {
+            enemyBullet.sprite.draw(batch);
+        }
+    }
+
+    void drawBulletDebug() {
+        for (EnemyBullet enemyBullet: enemyBulletArray) {
+            if (enemyBullet.isCircle) {
+                debugRenderer.drawCircleHitbox(enemyBullet.circleHitbox);
+            } else {
+                debugRenderer.drawHitbox(enemyBullet.rectangleHitbox);
+            }
         }
     }
 
@@ -255,8 +302,32 @@ public abstract class Enemy {
         return false;
     }
 
+    public void damageShip() {
+        for (EnemyBullet enemyBullet: enemyBulletArray) {
+            if (enemyBullet.isCircle) {
+                if (Intersector.overlaps(enemyBullet.circleHitbox, mainShip.shipHurtbox)) {
+                    mainShip.takeDamage();
+                }
+            } else {
+                if (Intersector.overlaps(mainShip.shipHurtbox, enemyBullet.rectangleHitbox)) {
+                    mainShip.takeDamage();
+                }
+            }
+        }
+    }
+
     public boolean getIsDead() {
         return isDead;
+    }
+
+    /**
+     * Method to check if the enemy is in the screen this frame or not.
+     * @param worldWidth The width of the world.
+     * @param worldHeight The height of the world.
+     * @return Whether the enemy is in the screen in this frame.
+     */
+    public boolean isInScreenThisFrame(float worldWidth, float worldHeight) {
+        return (sprite.getX() > -width && sprite.getX() < worldWidth && sprite.getY() > -height && sprite.getY() < worldHeight);
     }
 
     public float getWidth() {

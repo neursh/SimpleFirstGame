@@ -1,9 +1,8 @@
 package io.github.gucksus.simplefirstgame.tools;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 
 public class ScrollingBackground {
     Texture backgroundAnimationSheet;
@@ -17,13 +16,17 @@ public class ScrollingBackground {
     float width = 2;
     float height = 2;
     float animationProb = .001f;
+    float worldHeight;
+    SpriteBatch batch;
 
-    public ScrollingBackground(float worldHeight) {
+    public ScrollingBackground(float worldHeight, SpriteBatch batch) {
         backgroundAnimationSheet = new Texture("Background/background_animation_sheet3.png");
         TextureRegion[][] tmp = TextureRegion.split(backgroundAnimationSheet, backgroundAnimationSheet.getWidth() / FRAME_NUM, backgroundAnimationSheet.getHeight());
         TextureRegion[] backgroundTileAnimationFrames = new TextureRegion[FRAME_NUM];
         System.arraycopy(tmp[0], 0, backgroundTileAnimationFrames, 0, FRAME_NUM);
         backgroundAnimation = new Animation<>(frameDuration, backgroundTileAnimationFrames);
+        this.worldHeight = worldHeight;
+        this.batch = batch;
     }
 
     void checkForAnimationTrigger() {
@@ -34,19 +37,21 @@ public class ScrollingBackground {
         }
     }
 
-    public void backgroundUpdate(float delta, float worldHeight) {
-        processOffsetY (delta, worldHeight);
+    public void backgroundUpdate() {
+        processOffsetY ();
         checkForAnimationTrigger();
     }
 
-    void processOffsetY (float delta, float worldHeight) {
+    void processOffsetY () {
+        float delta = Gdx.graphics.getDeltaTime();
         offsetY -= speed * delta;
         if (-offsetY + worldHeight < worldHeight) {
             offsetY -= height;
         }
     }
 
-    public void draw(Batch batch, float delta) {
+    public void draw() {
+        float delta = Gdx.graphics.getDeltaTime();
         TextureRegion currentFrame = backgroundAnimation.getKeyFrame(stateTime, false);
         if (isInAnimation) {
             stateTime += delta;

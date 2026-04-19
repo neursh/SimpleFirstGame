@@ -1,3 +1,6 @@
 Some new features that i came up with:
 - Ship can parry with switching weapon.
 - Skull enemies if are be low the screen, explode.
+- There will be a type of enemy that can explode. I'm intending this to be killed for chained explosions for some high risk high reward or something.
+- The bullet system will copy from musha.
+
