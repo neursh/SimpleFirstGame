@@ -22,7 +22,7 @@ public class SkullShooterEnemy extends Enemy {
         this.bulletTexture = bulletTexture;
         animationInterval = .7f;
         shootFrameInterval = .05f;
-        shootAnimationRepeat = 15;
+        shootAnimationRepeat = 30;
         shootSpriteIndex = 6;
     }
 

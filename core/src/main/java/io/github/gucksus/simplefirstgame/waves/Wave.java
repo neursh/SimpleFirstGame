@@ -42,7 +42,7 @@ public class Wave {
         this.activeEnemyArray = activeEnemyArray;
         this.totalEnemies = totalEnemies;
         this.interval = interval;
-        startPoint = new Vector2(startX, startY);
+        startPoint =  new Vector2(startX, startY);
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
         this.level = level;
@@ -60,9 +60,8 @@ public class Wave {
     public void enemyUpdateRemoval() {
         for (int i = waveEnemyArray.size - 1; i >= 0; --i) {
             Enemy enemy = waveEnemyArray.get(i);
-            if (enemy.getIsDead() && enemy.isDeathAnimationFinished()) { // If the enemy is dead and
-                                                                         // finished death
-                                                                         // animation.
+            // If the enemy is dead and finished death animation.
+            if (enemy.getIsDead() && enemy.isDeathAnimationFinished()) {
                 activeEnemyArray.removeValue(enemy, true);
                 waveEnemyArray.removeIndex(i);
             }
@@ -71,7 +70,7 @@ public class Wave {
 
     void updateCenterPoint() {
         if (centerEnemy != null) {
-            centerPoint = centerEnemy.getCenter();
+            centerPoint = centerEnemy.getCoordinate();
         }
     }
 
@@ -85,7 +84,6 @@ public class Wave {
         // destination.
 
         destination.set(endX, endY);
-        System.out.println(startPoint.x + " " + destination.x);
         for (Enemy enemy : waveEnemyArray) {
             enemy.moveStraight(duration);
         }
@@ -102,9 +100,8 @@ public class Wave {
 
         centerPoint = center;
         this.revolutionNum = revolutionNum;
-        Enemy firstEnemy = waveEnemyArray.first();
-        Vector2 firstEnemyToCenter = new Vector2(firstEnemy.getCenter().x - center.x,
-                firstEnemy.getCenter().y - center.y);
+        Vector2 firstEnemyToCenter = new Vector2(startPoint.x - center.x,
+                startPoint.y - center.y);
         radius = firstEnemyToCenter.len();
 
         for (Enemy enemy : waveEnemyArray) {
@@ -114,8 +111,8 @@ public class Wave {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                startPoint.set(waveEnemyArray.first().sprite.getX(),
-                        waveEnemyArray.first().sprite.getY());
+                startPoint.set(waveEnemyArray.first().getCoordinate().x,
+                        waveEnemyArray.first().getCoordinate().y);
             }
         }, duration);
 
@@ -131,11 +128,11 @@ public class Wave {
             clockwiseMultiplier = -1;
 
         centerEnemy = center;
-        centerPoint.set(center.sprite.getX(), center.sprite.getY());
+        centerPoint.set(center.getCoordinate().x, center.getCoordinate().y);
         this.revolutionNum = revolutionNum;
         Enemy firstEnemy = waveEnemyArray.first();
-        Vector2 firstEnemyToCenter = new Vector2(firstEnemy.getCenter().x - centerPoint.x,
-                firstEnemy.getCenter().y - centerPoint.y);
+        Vector2 firstEnemyToCenter = new Vector2(firstEnemy.getCoordinate().x - centerPoint.x,
+                firstEnemy.getCoordinate().y - centerPoint.y);
         radius = firstEnemyToCenter.len();
 
         for (Enemy enemy : waveEnemyArray) {
@@ -145,8 +142,8 @@ public class Wave {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                startPoint.set(waveEnemyArray.first().sprite.getX(),
-                        waveEnemyArray.first().sprite.getY());
+                startPoint.set(waveEnemyArray.first().getCoordinate().x,
+                        waveEnemyArray.first().getCoordinate().y);
             }
         }, duration);
 

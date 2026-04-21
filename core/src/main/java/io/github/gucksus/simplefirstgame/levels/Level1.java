@@ -2,6 +2,7 @@ package io.github.gucksus.simplefirstgame.levels;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import io.github.gucksus.simplefirstgame.Constants;
 import io.github.gucksus.simplefirstgame.entities.MainShip;
 import io.github.gucksus.simplefirstgame.entities.base.Enemy;
@@ -111,12 +112,11 @@ public class Level1 extends Level {
 
     @Override
     public void enemySpawnDebug() {
-        addNewWave(1, 0, 3, 7);
+        addNewWave(1, 0, 7, 7);
         Wave A1 = waveArray.peek();
         addSkullShooterIntoWave(A1);
-        A1.moveAllEnemyStraight(2, 5, 4);
-        // A1.moveAllEnemyInCircle(new Vector2(3, 4), 4f, 8f, true);
-        // A1.moveAllEnemyStraight(3, 4, 2);
+        A1.moveAllEnemyStraight(3, 3, 1);
+        A1.moveAllEnemyInCircle(new Vector2(4, 11/2f), 4, 3, false);
     }
 
     public void dispose() {

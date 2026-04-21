@@ -31,7 +31,7 @@ import io.github.gucksus.simplefirstgame.waves.Wave;
  */
 public abstract class Enemy {
     protected float health;
-    public Sprite sprite;
+    protected Sprite sprite;
     protected Array<BoxWithOffset> hitboxes = new Array<>();
     protected Array<BoxWithOffset> hurtboxes = new Array<>();
     protected float width;
@@ -98,6 +98,8 @@ public abstract class Enemy {
     enum movingType {
         Straight, Circle
     }
+    Vector2 centerPoint;
+    float radius;
 
     BulletHolder bulletHolder;
 
@@ -109,7 +111,7 @@ public abstract class Enemy {
         pixelLength = new Vector2(width / textureSize.x, height / textureSize.y);
         sprite = new Sprite(staticTexture);
         sprite.setSize(width, height);
-        sprite.setPosition(iniX, iniY);
+        sprite.setPosition(iniX - width / 2, iniY - height / 2);
         Constants constants = wave.level.constants;
         this.batch = constants.batch;
         this.debugRenderer = constants.debugRenderer;
@@ -158,15 +160,18 @@ public abstract class Enemy {
 
     public void moveCircle(float duration) {
         Vector2 tempCenterPoint = wave.centerPoint;
+        float tempRadius = wave.radius;
         Timer.Task task = new Timer.Task() {
             @Override
             public void run() {
                 isMoving = true;
                 currentMovingType = movingType.Circle;
                 moveDuration = duration;
-                Vector2 thisToCenter = new Vector2(getCenter().x - tempCenterPoint.x,
-                        getCenter().y - tempCenterPoint.y);
+                Vector2 thisToCenter = new Vector2(getCoordinate().x - tempCenterPoint.x,
+                        getCoordinate().y - tempCenterPoint.y);
                 angle = thisToCenter.angleRad();
+                centerPoint = tempCenterPoint;
+                radius = tempRadius;
             }
         };
         addTask(task);
@@ -195,8 +200,8 @@ public abstract class Enemy {
         if (isMoving) {
             angle += nextFrameAngleDifference;
             Vector2 nextPoint = new Vector2();
-            nextPoint.x = wave.centerPoint.x + wave.radius * MathUtils.cos(angle);
-            nextPoint.y = wave.centerPoint.y + wave.radius * MathUtils.sin(angle);
+            nextPoint.x = centerPoint.x + radius * MathUtils.cos(angle);
+            nextPoint.y = centerPoint.y + radius * MathUtils.sin(angle);
             sprite.setCenter(nextPoint.x, nextPoint.y);
         }
     }
@@ -388,7 +393,7 @@ public abstract class Enemy {
         return height;
     }
 
-    public Vector2 getCenter() {
+    public Vector2 getCoordinate() {
         return new Vector2(sprite.getX() + width / 2, sprite.getY() + height / 2);
     }
 }
