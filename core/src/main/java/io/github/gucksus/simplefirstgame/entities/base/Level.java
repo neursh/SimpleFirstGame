@@ -23,17 +23,15 @@ public abstract class Level {
     public float worldHeight;
     protected MainShip mainShip;
     public SpriteBatch batch;
-    protected Constants constants;
     protected BulletHolder bulletHolder;
 
-    public Level(Constants constants, BulletHolder bulletHolder, MainShip mainShip) {
+    public Level(BulletHolder bulletHolder, MainShip mainShip) {
         lastDelta = 67;
-        this.worldWidth = constants.worldWidth;
-        this.worldHeight = constants.worldHeight;
-        this.batch = constants.batch;
+        this.worldWidth = Constants.worldWidth;
+        this.worldHeight = Constants.worldHeight;
+        this.batch = Constants.batch;
         this.mainShip = mainShip;
-        this.debugRenderer = constants.debugRenderer;
-        this.constants = constants;
+        this.debugRenderer = Constants.debugRenderer;
         this.bulletHolder = bulletHolder;
     }
 

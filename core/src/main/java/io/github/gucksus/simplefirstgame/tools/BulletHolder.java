@@ -11,9 +11,9 @@ public class BulletHolder {
     DebugRenderer debugRenderer;
     float worldHeight;
 
-    public BulletHolder(Constants constants) {
-        this.debugRenderer = constants.debugRenderer;
-        this.worldHeight = constants.worldHeight;
+    public BulletHolder() {
+        this.debugRenderer = Constants.debugRenderer;
+        this.worldHeight = Constants.worldHeight;
     }
 
     public void update() {

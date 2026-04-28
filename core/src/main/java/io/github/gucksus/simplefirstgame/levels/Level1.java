@@ -3,10 +3,10 @@ package io.github.gucksus.simplefirstgame.levels;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Timer;
-import io.github.gucksus.simplefirstgame.Constants;
 import io.github.gucksus.simplefirstgame.entities.MainShip;
 import io.github.gucksus.simplefirstgame.entities.base.Enemy;
 import io.github.gucksus.simplefirstgame.entities.base.Level;
+import io.github.gucksus.simplefirstgame.entities.enemies.ArchEnemy;
 import io.github.gucksus.simplefirstgame.entities.enemies.Carrier;
 import io.github.gucksus.simplefirstgame.entities.enemies.PopcornEnemy;
 import io.github.gucksus.simplefirstgame.entities.enemies.SkullShooterEnemy;
@@ -20,8 +20,8 @@ public class Level1 extends Level {
     Texture carrierTextureSheet;
     Texture powerUpTextureSheet;
 
-    public Level1(Constants constants, BulletHolder bulletHolder, MainShip mainShip) {
-        super(constants, bulletHolder, mainShip);
+    public Level1(BulletHolder bulletHolder, MainShip mainShip) {
+        super(bulletHolder, mainShip);
         skullAnimationSheet = new Texture("Enemy/skull_animation.png");
         skullBulletTexture = new Texture("Bullet/skull_bullet_texture.png");
         carrierTextureSheet = new Texture("Mainship/PowerUp/PowerUpCarrier.png");

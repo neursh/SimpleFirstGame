@@ -27,7 +27,6 @@ public class Core extends ApplicationAdapter {
     DebugRenderer debugRenderer;
     ShapeRenderer shapeRenderer;
     BulletHolder bulletHolder;
-    Constants constants;
 
     @Override
     public void create() {
@@ -38,10 +37,12 @@ public class Core extends ApplicationAdapter {
         viewport = new FitViewport(8, 11);
         worldHeight = viewport.getWorldHeight();
         worldWidth = viewport.getWorldWidth();
-        constants = new Constants(worldWidth, worldHeight, batch, debugRenderer, true);
-        bulletHolder = new BulletHolder(constants);
-        mainShip = new MainShip(4, 0, 2, 2, constants, bulletHolder);
-        level1 = new Level1(constants, bulletHolder, mainShip);
+
+        Constants.update(worldWidth, worldHeight, batch, debugRenderer, true);
+
+        bulletHolder = new BulletHolder();
+        mainShip = new MainShip(4, 0, 2, 2, bulletHolder);
+        level1 = new Level1(bulletHolder, mainShip);
         currentLevel = level1;
         scrollingBackground = new ScrollingBackground(viewport.getWorldHeight(), batch);
     }
@@ -78,7 +79,7 @@ public class Core extends ApplicationAdapter {
 
         batch.end();
 
-        if (constants.debugMode) {
+        if (Constants.debugMode) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
             mainShip.drawDebug();

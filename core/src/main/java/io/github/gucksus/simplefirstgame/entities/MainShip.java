@@ -39,7 +39,7 @@ public class MainShip {
     DebugRenderer debugRenderer;
     BulletHolder bulletHolder;
 
-    public MainShip(float centerX, float iniY, float width, float height, Constants constants,
+    public MainShip(float centerX, float iniY, float width, float height,
             BulletHolder bulletHolder) {
         this.width = width;
         this.height = height;
@@ -61,10 +61,10 @@ public class MainShip {
         shipHurtbox = new Circle(shipSprite.getX() + width / 2, iniY + hurtboxOffsetY, .1f);
         currentBullet = new BasicBullet(basicBulletIdleFrames, 69, 69, 67, 67, batch);
         directionDifferenceMultiplier = new Vector2();
-        worldWidth = constants.worldWidth;
-        worldHeight = constants.worldHeight;
-        batch = constants.batch;
-        debugRenderer = constants.debugRenderer;
+        worldWidth = Constants.worldWidth;
+        worldHeight = Constants.worldHeight;
+        batch = Constants.batch;
+        debugRenderer = Constants.debugRenderer;
         this.bulletHolder = bulletHolder;
     }
 

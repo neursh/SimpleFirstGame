@@ -13,10 +13,9 @@ public class PowerUp extends Bullet {
         speed = 11;
         damage = 0;
         fireRate = 0;
-        rectangleHitbox =
-                new BoxWithOffset(iniX, iniY, 28, 24, 2, 5, pixelLength.x, pixelLength.y);
+        rectangleHitbox = new BoxWithOffset(iniX, iniY, 28, 24, 2, 5, pixelLength.x, pixelLength.y);
         this.initialAngle = initialAngle;
         this.initialVelocity = initialVelocity;
-        movingType = movingType.Oblique;
+        movingType = MovingType.Oblique;
     }
 }

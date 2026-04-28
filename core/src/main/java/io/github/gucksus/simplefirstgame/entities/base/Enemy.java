@@ -110,12 +110,11 @@ public abstract class Enemy {
         sprite = new Sprite(staticTexture);
         sprite.setSize(width, height);
         sprite.setPosition(iniX - width / 2, iniY - height / 2);
-        Constants constants = wave.level.constants;
-        this.batch = constants.batch;
-        this.debugRenderer = constants.debugRenderer;
+        this.batch = Constants.batch;
+        this.debugRenderer = Constants.debugRenderer;
         this.mainShip = mainShip;
-        this.worldWidth = constants.worldWidth;
-        this.worldHeight = constants.worldHeight;
+        this.worldWidth = Constants.worldWidth;
+        this.worldHeight = Constants.worldHeight;
         this.wave = wave;
         this.bulletHolder = wave.level.bulletHolder;
         path.add(new Vector2(iniX, iniY));
