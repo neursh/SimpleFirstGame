@@ -45,6 +45,13 @@ public class Level1 extends Level {
         }
     }
 
+    private void addArch(Wave wave) {
+        TextureRegion staticPopcornTexture = new TextureRegion(skullBulletTexture);
+        Enemy enemy = new ArchEnemy(staticPopcornTexture, wave.path.first().x, wave.path.first().y,
+                mainShip, wave);
+        wave.addEnemy(enemy);
+    }
+
     private void addSkullShooterIntoWave(Wave... waves) {
         for (Wave wave : waves) {
             for (int i = 0; i < wave.totalEnemies; i++) {
@@ -112,7 +119,15 @@ public class Level1 extends Level {
     public void enemySpawnDebug() {
         addNewWave(1, 0, 1, 8);
         Wave A1 = waveArray.first();
-        addCarrier(A1);
+        for (int i = 0; i < 10000; i++) {
+            final float time = i * 0.1f;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    addArch(A1);
+                }
+            }, time);
+        }
     }
 
     public void dispose() {
