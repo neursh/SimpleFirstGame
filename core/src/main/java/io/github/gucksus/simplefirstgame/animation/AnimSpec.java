@@ -8,7 +8,7 @@ import io.github.gucksus.simplefirstgame.helpers.AtomicFloat;
 public class AnimSpec<T> {
     @FunctionalInterface
     public interface AnimationCallback<T> {
-        void execute(T value);
+        void execute(T value, float progress);
     }
 
     private CallableMath<T> math;
@@ -82,7 +82,7 @@ public class AnimSpec<T> {
         this.progress.set(normalize((float) this.animatedSec.get() / this.animateSec.get()));
 
         if (this.waitedSec.get() == 0) {
-            this.callback.execute(this.math.get(this.progress.get()));
+            this.callback.execute(this.math.get(this.progress.get()), this.progress.get());
         }
 
         if (progress.get() == 1) {
