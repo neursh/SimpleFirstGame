@@ -91,7 +91,7 @@ public abstract class Enemy {
     protected AnimationType currentAnimationType = AnimationType.Idle;
     public SpriteBatch batch;
     protected DebugRenderer debugRenderer;
-    MainShip mainShip;
+    protected MainShip mainShip;
     protected float worldWidth;
     protected float worldHeight;
     public Wave wave;
