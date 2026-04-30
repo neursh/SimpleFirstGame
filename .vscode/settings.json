@@ -2,10 +2,5 @@
   "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
   "java.format.settings.profile": "GoogleStyle",
   "editor.formatOnSave": true,
-  "cSpell.words": [
-    "daaus",
-    "Intersector",
-    "Mainship",
-    "simplefirstgame"
-  ]
+  "cSpell.words": ["daaus", "Intersector", "Mainship", "simplefirstgame"]
 }

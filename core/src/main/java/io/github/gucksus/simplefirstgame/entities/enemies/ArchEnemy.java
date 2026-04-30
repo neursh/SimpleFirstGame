@@ -43,11 +43,11 @@ public class ArchEnemy extends Enemy {
         CubicBezier moveDown = new CubicBezier(v(worldWidth * 0.4f, worldHeight * 0.9f),
                 v(worldWidth * 0.1f, worldHeight), v(0, worldHeight), v(worldWidth, 0));
 
-        AnimSpec<Vector2> moveUpDef = new AnimSpec<>(moveUp, (value) -> {
+        AnimSpec<Vector2> moveUpDef = new AnimSpec<>(moveUp, (value, progress) -> {
             setPosition(value);
         }, 0, 2, 2, 10);
 
-        AnimSpec<Vector2> moveDownDef = new AnimSpec<>(moveDown, (value) -> {
+        AnimSpec<Vector2> moveDownDef = new AnimSpec<>(moveDown, (value, progress) -> {
             setPosition(value);
         }, 2, 2, 0, 10);
 
@@ -69,7 +69,7 @@ public class ArchEnemy extends Enemy {
             CubicBezier fun = new CubicBezier(this.getCoordinate(), v(0, worldHeight),
                     v(worldWidth, worldHeight), this.mainShip.getCoordinate());
 
-            AnimSpec<Vector2> terror = new AnimSpec<>(fun, (value) -> {
+            AnimSpec<Vector2> terror = new AnimSpec<>(fun, (value, progress) -> {
                 setPosition(value);
             }, 0, 1, 0, 0);
 

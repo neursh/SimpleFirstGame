@@ -6,10 +6,10 @@ import com.badlogic.gdx.Gdx;
 
 
 public class AnimScheduler<T, K> {
-    private ConcurrentHashMap<String, AnimSpec<K>> specs = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, AnimSpec<K>> specs = new ConcurrentHashMap<>();
 
-    AtomicBoolean autoClean = new AtomicBoolean(false);
-    AtomicBoolean disposeFlag = new AtomicBoolean(false);
+    private final AtomicBoolean autoClean = new AtomicBoolean(false);
+    private final AtomicBoolean disposeFlag = new AtomicBoolean(false);
 
     private void framer() {
         Gdx.app.postRunnable(new Runnable() {

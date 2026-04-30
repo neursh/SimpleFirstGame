@@ -17,6 +17,7 @@ public class CubicBezier implements CallableMath<Vector2> {
         this.p4 = p4;
     }
 
+    @Override
     public Vector2 get(float progress) {
         if (progress < 0) {
             progress = 0;
