@@ -1,5 +1,6 @@
 package io.github.gucksus.simplefirstgame.entities.base;
 
+import java.util.UUID;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -62,6 +63,8 @@ public abstract class Enemy {
     }
 
     public Array<Timer.Task> tasks = new Array<>();
+
+    private String id = UUID.randomUUID().toString();
 
     protected Animation<TextureRegion> idleAnimation;
     protected Animation<TextureRegion> shootAnimation;
@@ -463,5 +466,13 @@ public abstract class Enemy {
 
     public Vector2 getCoordinate() {
         return new Vector2(sprite.getX() + width / 2, sprite.getY() + height / 2);
+    }
+
+    public void setPosition(Vector2 newPosition) {
+        sprite.setCenter(newPosition.x, newPosition.y);
+    }
+
+    public String getId() {
+        return id;
     }
 }

@@ -2,6 +2,7 @@ package io.github.gucksus.simplefirstgame.levels;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import io.github.gucksus.simplefirstgame.entities.MainShip;
 import io.github.gucksus.simplefirstgame.entities.base.Enemy;
@@ -20,8 +21,13 @@ public class Level1 extends Level {
     Texture carrierTextureSheet;
     Texture powerUpTextureSheet;
 
+    Vector2 v(float x, float y) {
+        return new Vector2(x, y);
+    }
+
     public Level1(BulletHolder bulletHolder, MainShip mainShip) {
         super(bulletHolder, mainShip);
+        popcornEnemyTexture = new Texture("Enemy/popcornEnemy.png");
         skullAnimationSheet = new Texture("Enemy/skull_animation.png");
         skullBulletTexture = new Texture("Bullet/skull_bullet_texture.png");
         carrierTextureSheet = new Texture("Mainship/PowerUp/PowerUpCarrier.png");
@@ -89,45 +95,14 @@ public class Level1 extends Level {
         Wave A2 = waveArray.peek();
         addPopcornEnemiesIntoWave(A1);
         addPopcornEnemiesIntoWave(A2);
-        A1.moveAllEnemyStraight(3, 1.5f, .5f);
-        A2.moveAllEnemyStraight(5, 1.5f, .5f);
-        A1.moveAllEnemyStraight(A1.path.first().x, 11, 2f);
-        A2.moveAllEnemyStraight(A2.path.first().x, 11, 2f);
-
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                addNewWave(1, 0, 1, 11);
-                Wave A3 = waveArray.peek();
-                addSkullShooterIntoWave(A3);
-                A3.moveAllEnemyStraight(1, -10, 15);
-            }
-        }, 5.5f);
-
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                addNewWave(1, 0, 7, 11);
-                Wave A4 = waveArray.peek();
-                addSkullShooterIntoWave(A4);
-                A4.moveAllEnemyStraight(7, -10, 10);
-            }
-        }, 6.5f);
     }
 
     @Override
     public void enemySpawnDebug() {
-        addNewWave(1, 0, 1, 8);
+        addNewWave(15000, .001f, 1, 8);
         Wave A1 = waveArray.first();
-        for (int i = 0; i < 10000; i++) {
-            final float time = i * 0.1f;
-            Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                    addArch(A1);
-                }
-            }, time);
-        }
+        addPopcornEnemiesIntoWave(A1);
+        A1.moveAllEnemyStraight(new Vector2[] {v(1, 8), v(4, 4), v(7, 8)}, 0, 1, 0, 1);
     }
 
     public void dispose() {

@@ -3,8 +3,11 @@ package io.github.gucksus.simplefirstgame.waves;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
+import io.github.gucksus.simplefirstgame.Constants;
+import io.github.gucksus.simplefirstgame.animation.AnimSpec;
 import io.github.gucksus.simplefirstgame.entities.base.Enemy;
 import io.github.gucksus.simplefirstgame.entities.base.Level;
+import io.github.gucksus.simplefirstgame.maths.PathLerp;
 
 public class Wave {
     protected Array<Enemy> activeEnemyArray;
@@ -79,15 +82,23 @@ public class Wave {
         updateCenterPoint();
     }
 
-    public void moveAllEnemyStraight(float endX, float endY, float duration) {
+    public void moveAllEnemyStraight(Vector2[] path, float delay, float animate, float wait,
+            int repeat) {
         // Here the duration is the amount of time it takes for the first enemy to reach the
         // destination.
-        path.peek().set(endX, endY);
-        for (Enemy enemy : waveEnemyArray) {
-            enemy.moveStraight(duration);
+        PathLerp moveStraight = new PathLerp(new Array<>(path));
+        for (int i = 0; i < waveEnemyArray.size; i++) {
+            Enemy enemy = waveEnemyArray.get(i);
+            AnimSpec<Vector2> moveStraightAnim = new AnimSpec<>(moveStraight, (value, progress) -> {
+                enemy.setPosition(value);
+            }, delay, animate, wait, repeat);
+
+            Timer.schedule(new Timer.Task() {
+                public void run() {
+                    Constants.pathLerpAnimScheduler.play(enemy.getId() + "moveStraight", moveStraightAnim);
+                }
+            }, i * interval);
         }
-        path.first().set(path.peek());
-        previousDuration += duration;
     }
 
     public void moveAllEnemyInCircle(Vector2 center, float revolutionNum, float duration,
@@ -99,7 +110,8 @@ public class Wave {
 
         centerPoint = center;
         this.revolutionNum = revolutionNum;
-        Vector2 firstEnemyToCenter = new Vector2(path.first().x - center.x, path.first().y - center.y);
+        Vector2 firstEnemyToCenter =
+                new Vector2(path.first().x - center.x, path.first().y - center.y);
         radius = firstEnemyToCenter.len();
 
         for (Enemy enemy : waveEnemyArray) {
@@ -150,14 +162,14 @@ public class Wave {
     }
 
     public void moveAllEnemyCurve(Vector2[] points, float duration) {
-        Vector2 tempStartPoint = path.first(); 
+        Vector2 tempStartPoint = path.first();
         path.clear();
         path.add(tempStartPoint);
-        for (Vector2 point: points) {
+        for (Vector2 point : points) {
             path.add(point);
         }
 
-        for (Enemy enemy: waveEnemyArray) {
+        for (Enemy enemy : waveEnemyArray) {
             enemy.moveCurve(duration);
         }
 
