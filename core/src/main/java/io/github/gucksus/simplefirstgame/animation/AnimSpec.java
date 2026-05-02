@@ -58,24 +58,8 @@ public class AnimSpec<T> {
     }
 
     /**
-     * This method basically clamp value between [0, 1].
-     * 
-     * @param value
-     * @return clamped value.
-     */
-    private float normalize(float value) {
-        if (value > 1) {
-            return 1;
-        }
-        if (value < 0) {
-            return 0;
-        }
-        return value;
-    }
-
-    /**
      * This method updates the animation.
-     * 
+     *
      * @param delta delta time.
      * @return If this animation is finished or not.
      */
@@ -103,7 +87,7 @@ public class AnimSpec<T> {
 
         this.animatedSec.set(this.animatedSec.get() + delta);
         // Update progess of the animation through elapsed time.
-        this.progress.set(normalize((float) this.animatedSec.get() / this.animateSec.get()));
+        this.progress.set(Math.clamp((float) this.animatedSec.get() / this.animateSec.get(), 0, 1));
 
         // If this animation is still running, call for update method.
         if (this.waitedSec.get() == 0) {
