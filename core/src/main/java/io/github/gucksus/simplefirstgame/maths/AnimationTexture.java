@@ -6,13 +6,19 @@ import io.github.gucksus.simplefirstgame.animation.CallableMath;
 
 public class AnimationTexture implements CallableMath<TextureRegion> {
     Animation<TextureRegion> animation;
+    float animationDuration;
 
     public AnimationTexture(Animation<TextureRegion> animation) {
         this.animation = animation;
+        animationDuration = animation.getAnimationDuration();
     }
 
     @Override
     public TextureRegion get(float progess) {
         return animation.getKeyFrame(animation.getAnimationDuration() * progess);
+    }
+
+    public float getDuration() {
+        return animationDuration;
     }
 }
