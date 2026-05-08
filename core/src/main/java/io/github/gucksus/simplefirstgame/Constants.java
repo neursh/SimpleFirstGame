@@ -1,8 +1,10 @@
 package io.github.gucksus.simplefirstgame;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.gucksus.simplefirstgame.animation.AnimScheduler;
+import io.github.gucksus.simplefirstgame.maths.AnimationTexture;
 import io.github.gucksus.simplefirstgame.maths.Circular;
 import io.github.gucksus.simplefirstgame.maths.CubicBezier;
 import io.github.gucksus.simplefirstgame.maths.PathLerp;
@@ -28,6 +30,9 @@ public class Constants {
                         new AnimScheduler<>(true);
 
         public static AnimScheduler<Circular, Vector2> circularAnimScheduler =
+                        new AnimScheduler<>(true);
+
+        public static AnimScheduler<AnimationTexture, TextureRegion> textureAnimScheduler =
                         new AnimScheduler<>(true);
 
         public static void update(float worldWidth, float worldHeight, SpriteBatch batch,
