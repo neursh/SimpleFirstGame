@@ -11,6 +11,8 @@ public class Circular implements CallableMath<Vector2> {
     float radius;
     int revolutionNum;
 
+    final Vector2 output = new Vector2();
+
     public Circular(Vector2 startPoint, Vector2 center, int revolutionNum) {
         this.startPoint = startPoint;
         this.center = center;
@@ -24,7 +26,7 @@ public class Circular implements CallableMath<Vector2> {
         if (progress == 0 || progress == 1)
             return startPoint;
         float angle = (startAngle + progress * MathUtils.PI2 * revolutionNum) % MathUtils.PI2;
-        return new Vector2(center.x + radius * MathUtils.cos(angle),
+        return output.set(center.x + radius * MathUtils.cos(angle),
                 center.y + radius * MathUtils.sin(angle));
     }
 }
