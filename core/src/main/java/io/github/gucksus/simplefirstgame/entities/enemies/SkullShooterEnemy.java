@@ -21,7 +21,6 @@ public class SkullShooterEnemy extends Enemy {
         this.bulletIdleFrames = bulletIdleAnimationFrames;
         animationInterval = .7f;
         shootFrameInterval = .05f;
-        shootAnimationRepeat = 30;
         shootSpriteIndex = 6;
     }
 

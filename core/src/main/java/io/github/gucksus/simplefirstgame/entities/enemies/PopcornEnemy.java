@@ -14,8 +14,6 @@ public class PopcornEnemy extends Enemy {
         health = 1f;
         hitboxes.add(new BoxWithOffset(iniX, iniY, 20, 16, 6, 6, pixelLength.x, pixelLength.y));
         hurtboxes.add(new BoxWithOffset(iniX, iniY, 26, 15, 3, 7, pixelLength.x, pixelLength.y));
-        shootAnimationFrameNum = 0;
-        deathAnimationFrameNum = 0;
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import io.github.gucksus.simplefirstgame.entities.MainShip;
 import io.github.gucksus.simplefirstgame.entities.base.Bullet;
 import io.github.gucksus.simplefirstgame.entities.base.Enemy;
@@ -15,8 +16,26 @@ import io.github.gucksus.simplefirstgame.waves.Wave;
 public class Carrier extends Enemy {
     float secondsOnScreen = 12;
     float amplitude = worldWidth / 2;
+    protected Array<Vector2> path = new Array<>();
+    protected CatmullRomSpline<Vector2> catmullRomSpline;
+    protected float moveDuration;
+    protected float moveTimer;
+    protected movingType currentMovingType = movingType.Straight;
 
-    public Carrier(TextureRegion texture, TextureRegion[] idleFrames, float iniX, float iniY, MainShip mainShip, Wave wave) {
+    protected enum movingType {
+        Straight, Circle, Curve, Still
+    }
+
+    protected float stateTime;
+
+    protected enum AnimationType {
+        Idle, Shoot, Death
+    }
+    protected AnimationType currentAnimationType = AnimationType.Idle;
+
+
+    public Carrier(TextureRegion texture, TextureRegion[] idleFrames, float iniX, float iniY,
+            MainShip mainShip, Wave wave) {
         super(texture, iniX, iniY, 1, 1, mainShip, wave);
         health = 4;
         moveDuration = 2;
@@ -24,35 +43,12 @@ public class Carrier extends Enemy {
         currentAnimationType = AnimationType.Idle;
         hurtboxes.add(new BoxWithOffset(iniX, iniY, 16, 21, 8, 6, pixelLength.x, pixelLength.y));
         bulletIdleFrames = idleFrames;
+        path.add(new Vector2(iniX, iniY));
     }
 
     @Override
     protected Bullet returnBulletType(float shootPointX, float shootPointY, float dx, float dy) {
         return null;
-    }
-
-    @Override
-    public void drawAnimation() {
-        float delta = Gdx.graphics.getDeltaTime();
-        switch (currentAnimationType) {
-            case Idle:
-                stateTime += delta;
-                TextureRegion currentFrame = idleAnimation.getKeyFrame(stateTime);
-
-                batch.draw(currentFrame, sprite.getX(), sprite.getY(), width, height);
-                if (idleAnimation.isAnimationFinished(stateTime))
-                    stateTime = 0;
-                break;
-            case Death:
-                triggerMoveOutOfScreen();
-                stateTime += delta;
-                TextureRegion currentFrame1 = deathAnimation.getKeyFrame(stateTime);
-                
-                batch.draw(currentFrame1, sprite.getX(), sprite.getY(), width, height);
-                if (idleAnimation.isAnimationFinished(stateTime))
-                    stateTime = 0;
-                break;
-        }
     }
 
     void triggerMoveOutOfScreen() {
@@ -106,14 +102,28 @@ public class Carrier extends Enemy {
                 catmullRomSpline.valueAt(nextPoint1, moveTimer / moveDuration);
                 sprite.setCenter(nextPoint1.x, nextPoint1.y);
                 break;
-            case Still:
-                break;
         }
     }
 
     @Override
     protected void takeDamage(float damage) {
         health -= 1;
-        bulletHolder.enemyBullets.add(new PowerUp(bulletIdleFrames, sprite.getX(), sprite.getY(), 2, 1, batch));
+        if (health == 0) {
+            triggerDeathAnimation();
+            triggerMoveOutOfScreen();
+            isDead = true;
+            isInvulnerable = true;
+            isHarmless = true;
+        }
+        bulletHolder.enemyBullets
+                .add(new PowerUp(bulletIdleFrames, sprite.getX(), sprite.getY(), 2, 1, batch));
+    }
+
+    @Override
+    public boolean isDeathAnimationFinished() {
+        float delta = Gdx.graphics.getDeltaTime();
+        if (isDead)
+            deathAnimationTimer += delta;
+        return deathAnimationTimer >= 10;
     }
 }

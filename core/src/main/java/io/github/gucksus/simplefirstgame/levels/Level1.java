@@ -1,5 +1,6 @@
 package io.github.gucksus.simplefirstgame.levels;
 
+import java.nio.file.WatchEvent;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -48,6 +49,7 @@ public class Level1 extends Level {
                 TextureRegion staticPopcornTexture = new TextureRegion(popcornEnemyTexture);
                 Enemy enemy = new PopcornEnemy(staticPopcornTexture, wave.path.first().x,
                         wave.path.first().y, mainShip, wave);
+                enemy.initializeIdleAnimation(new TextureRegion[] {staticPopcornTexture});
                 wave.addEnemy(enemy);
             }
         }
@@ -68,6 +70,8 @@ public class Level1 extends Level {
                 Enemy enemy = new SkullShooterEnemy(temp[0][0],
                         TextureRegion.split(skullBulletTexture, 32, 32)[0], wave.path.first().x,
                         wave.path.first().y, mainShip, wave);
+                TextureRegion tmp = new TextureRegion(popcornEnemyTexture);
+                enemy.initializeIdleAnimation(new TextureRegion[] {tmp});
                 enemy.initializeShootAnimation(temp[0]);
                 enemy.initializeDeathAnimation(temp[1]);
                 wave.addEnemy(enemy);
@@ -98,14 +102,13 @@ public class Level1 extends Level {
 
     @Override
     public void enemySpawnDebug() {
-        Wave A1 = addNewWave(5, .1f, 1, 8);
-        Wave A2 = addNewWave(5, .1f, 0, 8);
-        addCarrier();
-        addPopcornEnemiesIntoWave(A1);
-        addPopcornEnemiesIntoWave(A2);
+        Wave A1 = addNewWave(3, 0, 4, 8);
+        Wave A2 = addNewWave(1, 0, 5, 8);
+        Wave A3 = addNewWave(1, 0, 6, 8);
+        addSkullShooterIntoWave(A1, A2, A3);
 
-        A1.moveAllEnemyStraight(new Vector2[] {v(1, 8), v(4, 4), v(7, 8)}, 0, 1, 0, 0);
-        A2.moveAllEnemyStraight(new Vector2[] {v(0, 8), v(6, 7), v(5, 1)}, 0, 1, 0, 0);
+        // A1.moveAllEnemyStraight(new Vector2[] {v(1, 8), v(4, 4), v(7, 8)}, 0, 1, 0, 0);
+        // A2.moveAllEnemyStraight(new Vector2[] {v(0, 8), v(6, 7), v(5, 1)}, 0, 1, 0, 0);
         A2.moveAllEnemyInCircle(v(5, 1), v(3, 3), 1, 4, 0, 0, 2);
     }
 
