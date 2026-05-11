@@ -11,12 +11,15 @@ import com.badlogic.gdx.utils.Array;
 import io.github.gucksus.simplefirstgame.Constants;
 import io.github.gucksus.simplefirstgame.animation.AnimSpec;
 import io.github.gucksus.simplefirstgame.entities.base.Bullet;
+import io.github.gucksus.simplefirstgame.entities.bullets.AquaShield;
 import io.github.gucksus.simplefirstgame.entities.bullets.BasicBullet;
 import io.github.gucksus.simplefirstgame.maths.AnimationTexture;
 import io.github.gucksus.simplefirstgame.tools.BulletHolder;
 import io.github.gucksus.simplefirstgame.tools.DebugRenderer;
 
 public class MainShip {
+    Texture aquaShieldTexture;
+
     Texture basicBulletIdleSheet;
     TextureRegion[] basicBulletIdleFrames;
     public Circle shipHurtbox;
@@ -62,6 +65,7 @@ public class MainShip {
         timerSinceLastDamage = invulnerableDuration;
         basicBulletIdleSheet = new Texture("Bullet/basicBullet.png");
         spinAnimationSheet = new Texture("Mainship/ship_sprite_animation1.png");
+        aquaShieldTexture = new Texture("Mainship/PowerUp/AquaShield.png");
 
         initializeAnimation();
         basicBulletIdleFrames = getBasicBulletIdleFrames();
@@ -77,6 +81,29 @@ public class MainShip {
         debugRenderer = Constants.debugRenderer;
         currentBullet = new BasicBullet(basicBulletIdleFrames, 69, 69, 67, 67, batch);
         this.bulletHolder = bulletHolder;
+        activateAquaShield();
+    }
+
+    void activateAquaShield() {
+        for (int i = 0; i < 3; i++) {
+            AquaShield aquaShield =
+                    new AquaShield(TextureRegion.split(aquaShieldTexture, 32, 32)[0], width, height,
+                            67, 67, batch, this);
+            bulletHolder.shipPower.add(aquaShield);
+        }
+
+        Vector2 shipPoint = new Vector2(getCoordinate());
+        Vector2 basePoint = new Vector2(shipPoint.x + 1, shipPoint.y + 1);
+        float radius = basePoint.sub(shipPoint).len();
+        float baseAngle = basePoint.sub(shipPoint).angleRad();
+        float angleIncrement = MathUtils.PI2 / bulletHolder.shipPower.size;
+
+        for (int i = 0; i < bulletHolder.shipPower.size; i++) {
+            float angle = baseAngle + angleIncrement * i;
+            bulletHolder.shipPower.get(i).setPosition(shipPoint.x + radius * MathUtils.sin(angle),
+                    shipPoint.y + radius * MathUtils.cos(angle));
+            bulletHolder.shipPower.get(i).playAnimation();
+        }
     }
 
     void setSpriteTexture(TextureRegion value) {
@@ -108,6 +135,7 @@ public class MainShip {
     void triggerSpinAnim() {
         if (timerSinceLastSpin < spinDuration)
             return;
+        bulletHolder.shipPower.clear();
         currentAnimationState = AnimationState.Spinning;
         Constants.textureAnimScheduler.play("Spin",
                 new AnimSpec<>(spinAnimations.get(spinAnimIndex), (value, progress) -> {
@@ -186,8 +214,13 @@ public class MainShip {
     void animationStateUpdate() {
         switch (currentAnimationState) {
             case Spinning:
-                if (timerSinceLastSpin >= spinDuration)
+                if (timerSinceLastSpin >= spinDuration) {
                     currentAnimationState = AnimationState.Neutral;
+                    if (spinAnimIndex == 0) {
+                        activateAquaShield();
+                        break;
+                    }
+                }
                 break;
             case TurningLeft:
                 shipSprite.setRegion(turnAnimations[spinAnimIndex][0]);
