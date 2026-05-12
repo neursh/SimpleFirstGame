@@ -23,7 +23,7 @@ public class Carrier extends Enemy {
     protected movingType currentMovingType = movingType.Straight;
 
     protected enum movingType {
-        Straight, Curve
+        Straight, Curve, Still
     }
 
     protected float stateTime;
@@ -31,6 +31,7 @@ public class Carrier extends Enemy {
     protected enum AnimationType {
         Idle, Shoot, Death
     }
+
     protected AnimationType currentAnimationType = AnimationType.Idle;
 
 
@@ -96,9 +97,15 @@ public class Carrier extends Enemy {
                 break;
             case Curve:
                 moveTimer += delta;
+                if (moveTimer >= moveDuration) {
+                    currentMovingType = movingType.Still;
+                    break;
+                }
                 Vector2 nextPoint1 = new Vector2();
                 catmullRomSpline.valueAt(nextPoint1, moveTimer / moveDuration);
                 sprite.setCenter(nextPoint1.x, nextPoint1.y);
+                break;
+            case Still:
                 break;
         }
     }
@@ -113,8 +120,19 @@ public class Carrier extends Enemy {
             isInvulnerable = true;
             isHarmless = true;
         }
+
+        Vector2 currentPos = getCoordinate();
+        Vector2 nextPoint = new Vector2(path.first().x + MathUtils.sin(moveTimer) * amplitude,
+                path.first().y - moveTimer / secondsOnScreen * worldHeight);
+
+        float initialAngle;
+        if (nextPoint.x - currentPos.x < 0)
+            initialAngle = MathUtils.random(MathUtils.HALF_PI, 2.44f);
+        else
+            initialAngle = MathUtils.random(.7f, MathUtils.HALF_PI);
+
         bulletHolder.enemyBullets
-                .add(new PowerUp(bulletIdleFrames, sprite.getX(), sprite.getY(), 2, 1, batch));
+                .add(new PowerUp(bulletIdleFrames, sprite.getX(), sprite.getY(), 2, initialAngle, batch));
     }
 
     @Override
