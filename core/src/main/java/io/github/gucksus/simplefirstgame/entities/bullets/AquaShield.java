@@ -5,7 +5,6 @@ import java.util.UUID;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-
 import io.github.gucksus.simplefirstgame.Constants;
 import io.github.gucksus.simplefirstgame.animation.AnimSpec;
 import io.github.gucksus.simplefirstgame.entities.MainShip;
@@ -34,7 +33,7 @@ public class AquaShield extends Bullet {
 
     @Override
     public void playAnimation() {
-        circular = new Circular(getCoordinate(), mainShip.getCoordinate().cpy(), 99);
+        circular = new Circular(getCoordinate(), mainShip.getPastPositions().first(), 99);
         circularAnimSpec = new AnimSpec<>(circular, (value, progess) -> {
             this.setPosition(value.x, value.y);
             this.setRotation(circular.getAngle());

@@ -82,11 +82,12 @@ public class MainShip {
         debugRenderer = Constants.debugRenderer;
         currentBullet = new BasicBullet(basicBulletIdleFrames, 69, 69, 67, 67, batch);
         this.bulletHolder = bulletHolder;
-        activateAquaShield();
 
         for (int i = 0; i < powerDelay / .016f; i++) {
             pastPositions.add(new Vector2(centerX, centerY));
         }
+
+        activateAquaShield();
     }
 
     void activateAquaShield() {
