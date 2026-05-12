@@ -19,6 +19,8 @@ import io.github.gucksus.simplefirstgame.tools.DebugRenderer;
 
 public class MainShip {
     Texture aquaShieldTexture;
+    Array<Vector2> pastPositions = new Array<>();
+    float powerDelay = .05f;
 
     Texture basicBulletIdleSheet;
     TextureRegion[] basicBulletIdleFrames;
@@ -57,7 +59,7 @@ public class MainShip {
     float timerSinceKeyDown = 0;
     Vector2 lastDirectionVector = new Vector2();
 
-    public MainShip(float centerX, float iniY, float width, float height,
+    public MainShip(float centerX, float centerY, float width, float height,
             BulletHolder bulletHolder) {
         this.width = width;
         this.height = height;
@@ -71,9 +73,8 @@ public class MainShip {
         basicBulletIdleFrames = getBasicBulletIdleFrames();
 
         shipSprite.setSize(width, height);
-        shipSprite.setCenterX(centerX);
-        shipSprite.setY(iniY);
-        shipHurtbox = new Circle(shipSprite.getX() + width / 2, iniY + hurtboxOffsetY, .1f);
+        shipSprite.setCenter(centerX, centerY);
+        shipHurtbox = new Circle(shipSprite.getX() + width / 2, centerY + hurtboxOffsetY, .1f);
         directionVector = new Vector2();
         worldWidth = Constants.worldWidth;
         worldHeight = Constants.worldHeight;
@@ -82,6 +83,10 @@ public class MainShip {
         currentBullet = new BasicBullet(basicBulletIdleFrames, 69, 69, 67, 67, batch);
         this.bulletHolder = bulletHolder;
         activateAquaShield();
+
+        for (int i = 0; i < powerDelay / .016f; i++) {
+            pastPositions.add(new Vector2(centerX, centerY));
+        }
     }
 
     void activateAquaShield() {
@@ -151,6 +156,10 @@ public class MainShip {
 
     public void update() {
         float delta = Gdx.graphics.getDeltaTime();
+
+        pastPositions.removeIndex(0);
+        pastPositions.add(getCoordinate().cpy());
+
         timerSinceLastShot += delta;
         timerSinceLastDamage += delta;
         timerSinceLastSpin += delta;
@@ -277,6 +286,10 @@ public class MainShip {
 
     public Vector2 getCoordinate() {
         return new Vector2(shipSprite.getX() + width / 2, shipSprite.getY() + height / 2);
+    }
+
+    public Array<Vector2> getPastPositions() {
+        return pastPositions;
     }
 
     public void dispose() {

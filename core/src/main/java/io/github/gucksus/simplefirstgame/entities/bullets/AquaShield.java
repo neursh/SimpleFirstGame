@@ -29,7 +29,7 @@ public class AquaShield extends Bullet {
 
     @Override
     public void update() {
-        circular.setCenter(mainShip.getCoordinate());
+        circular.setCenter(mainShip.getPastPositions().first());
     }
 
     @Override
