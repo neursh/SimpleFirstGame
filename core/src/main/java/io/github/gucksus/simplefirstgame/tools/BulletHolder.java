@@ -9,6 +9,7 @@ public class BulletHolder {
     public Array<Bullet> enemyBullets = new Array<>();
     public Array<Bullet> shipBullets = new Array<>();
     public Array<Bullet> shipPower = new Array<>();
+    public Array<Bullet> bulletTerminators = new Array<>();
     DebugRenderer debugRenderer;
     float worldHeight;
 
