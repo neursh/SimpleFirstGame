@@ -112,27 +112,31 @@ public class Carrier extends Enemy {
 
     @Override
     protected void takeDamage(float damage) {
-        health -= 1;
-        if (health == 0) {
-            triggerDeathAnimation();
-            triggerMoveOutOfScreen();
-            isDead = true;
-            isInvulnerable = true;
-            isHarmless = true;
+        if (takeDamageTimer >= takeDamageInterval) {
+            health -= 1;
+            if (health == 0) {
+                triggerDeathAnimation();
+                triggerMoveOutOfScreen();
+                isDead = true;
+                isInvulnerable = true;
+                isHarmless = true;
+            }
+
+            Vector2 currentPos = getCoordinate();
+            Vector2 nextPoint = new Vector2(path.first().x + MathUtils.sin(moveTimer) * amplitude,
+                    path.first().y - moveTimer / secondsOnScreen * worldHeight);
+
+            float initialAngle;
+            if (nextPoint.x - currentPos.x < 0)
+                initialAngle = MathUtils.random(MathUtils.HALF_PI, 2.44f);
+            else
+                initialAngle = MathUtils.random(.7f, MathUtils.HALF_PI);
+            float initialVelocity = MathUtils.random(3, 3.5f);
+
+            bulletHolder.enemyBullets.add(new PowerUp(bulletIdleFrames, sprite.getX(),
+                    sprite.getY(), initialVelocity, initialAngle, batch));
+            takeDamageTimer = 0;
         }
-
-        Vector2 currentPos = getCoordinate();
-        Vector2 nextPoint = new Vector2(path.first().x + MathUtils.sin(moveTimer) * amplitude,
-                path.first().y - moveTimer / secondsOnScreen * worldHeight);
-
-        float initialAngle;
-        if (nextPoint.x - currentPos.x < 0)
-            initialAngle = MathUtils.random(MathUtils.HALF_PI, 2.44f);
-        else
-            initialAngle = MathUtils.random(.7f, MathUtils.HALF_PI);
-
-        bulletHolder.enemyBullets
-                .add(new PowerUp(bulletIdleFrames, sprite.getX(), sprite.getY(), 2, initialAngle, batch));
     }
 
     @Override
