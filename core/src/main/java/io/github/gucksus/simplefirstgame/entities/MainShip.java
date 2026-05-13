@@ -96,6 +96,7 @@ public class MainShip {
                     new AquaShield(TextureRegion.split(aquaShieldTexture, 32, 32)[0], width, height,
                             67, 67, batch, this);
             bulletHolder.shipPower.add(aquaShield);
+            bulletHolder.bulletTerminators.add(aquaShield);
         }
 
         Vector2 shipPoint = pastPositions.first();
@@ -142,6 +143,7 @@ public class MainShip {
         if (timerSinceLastSpin < spinDuration)
             return;
         bulletHolder.shipPower.clear();
+        bulletHolder.bulletTerminators.clear();
         currentAnimationState = AnimationState.Spinning;
         Constants.textureAnimScheduler.play("Spin",
                 new AnimSpec<>(spinAnimations.get(spinAnimIndex), (value, progress) -> {
@@ -261,7 +263,6 @@ public class MainShip {
 
     public void takeDamage() {
         lives -= 1;
-        System.out.println(1);
         if (lives == 0) {
             isDead = true;
         }
