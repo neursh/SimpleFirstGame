@@ -80,6 +80,9 @@ public abstract class Enemy {
 
     public boolean shootAnimationActivated;
 
+    protected float takeDamageTimer = 67;
+    protected float takeDamageInterval = .2f;
+
     public Enemy(TextureRegion staticTexture, float iniX, float iniY, float width, float height,
             MainShip mainShip, Wave wave) {
         this.width = width;
@@ -194,6 +197,8 @@ public abstract class Enemy {
     }
 
     public void update() {
+        float delta = Gdx.graphics.getDeltaTime();
+        takeDamageTimer += delta;
         moveUpdate();
         updateEnemyHitboxAndHurtbox();
         hitboxCheck();
@@ -228,20 +233,37 @@ public abstract class Enemy {
         }
 
         for (Bullet enemyBullet : bulletHolder.enemyBullets) {
-            if (enemyBullet.getDamage() != 0) {
-                if (enemyBullet.isCircle()) {
-                    if (Intersector.overlaps(enemyBullet.getCircleHitbox(), mainShip.shipHurtbox)) {
-                        mainShip.takeDamage();
-                    }
-                } else {
-                    if (Intersector.overlaps(mainShip.shipHurtbox,
-                            enemyBullet.getRectangleHitbox())) {
-                        mainShip.takeDamage();
+            if (enemyBullet.getDamage() == 0) {
+                if (Intersector.overlaps(mainShip.shipHurtbox, enemyBullet.getRectangleHitbox())) {
+                    bulletHolder.enemyBullets.removeValue(enemyBullet, true);
+                }
+                continue;
+            }
+
+
+            if (enemyBullet.isCircle()) {
+                for (Bullet bulletTerminator : bulletHolder.bulletTerminators) {
+                    if (Intersector.overlaps(enemyBullet.getCircleHitbox(),
+                            bulletTerminator.getRectangleHitbox())) {
+                        bulletHolder.enemyBullets.removeValue(enemyBullet, true);
+                        continue;
                     }
                 }
-            } else if (Intersector.overlaps(mainShip.shipHurtbox,
-                    enemyBullet.getRectangleHitbox())) {
-                bulletHolder.enemyBullets.removeValue(enemyBullet, true);
+                if (Intersector.overlaps(enemyBullet.getCircleHitbox(), mainShip.shipHurtbox)) {
+                    mainShip.takeDamage();
+                }
+
+            } else {
+                for (Bullet bulletTerminator : bulletHolder.bulletTerminators) {
+                    if (Intersector.overlaps(enemyBullet.getRectangleHitbox(),
+                            bulletTerminator.getRectangleHitbox())) {
+                        bulletHolder.enemyBullets.removeValue(enemyBullet, true);
+                        continue;
+                    }
+                }
+                if (Intersector.overlaps(mainShip.shipHurtbox, enemyBullet.getRectangleHitbox())) {
+                    mainShip.takeDamage();
+                }
             }
         }
     }
@@ -256,16 +278,25 @@ public abstract class Enemy {
                     bulletHolder.shipBullets.removeIndex(i);
                 }
             }
+            for (Bullet power : bulletHolder.shipPower) {
+                if (Intersector.overlaps(power.getRectangleHitbox(), hurtbox.getBox())
+                        && !isInvulnerable) {
+                    takeDamage(power.getDamage());
+                }
+            }
         }
     }
 
     protected void takeDamage(float damage) {
-        health -= damage;
-        if (health <= 0) {
-            isDead = true;
-            isInvulnerable = true;
-            isHarmless = true;
-            triggerDeathAnimation();
+        if (takeDamageTimer >= takeDamageInterval) {
+            health -= damage;
+            if (health <= 0) {
+                isDead = true;
+                isInvulnerable = true;
+                isHarmless = true;
+                triggerDeathAnimation();
+            }
+            takeDamageTimer = 0;
         }
     }
 
