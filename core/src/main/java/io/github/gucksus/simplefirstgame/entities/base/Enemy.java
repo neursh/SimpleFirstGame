@@ -2,10 +2,14 @@ package io.github.gucksus.simplefirstgame.entities.base;
 
 import java.util.UUID;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -65,6 +69,10 @@ public abstract class Enemy {
     protected float animationInterval;
     protected float deathAnimationTimer;
     protected TextureRegion[] bulletIdleFrames;
+    String vertexShader = Gdx.files.internal("Shader/defaultVertex.vert").readString();
+    String fragmentShader = Gdx.files.internal("Shader/hitFlashFragment.frag").readString();
+    ShaderProgram hitFlashShader = new ShaderProgram(vertexShader, fragmentShader);
+    Color averageColor;
 
     public SpriteBatch batch;
     protected DebugRenderer debugRenderer;
@@ -81,7 +89,7 @@ public abstract class Enemy {
     public boolean shootAnimationActivated;
 
     protected float takeDamageTimer = 67;
-    protected float takeDamageInterval = .2f;
+    protected float takeDamageInterval = .1f;
 
     public Enemy(TextureRegion staticTexture, float iniX, float iniY, float width, float height,
             MainShip mainShip, Wave wave) {
@@ -108,6 +116,39 @@ public abstract class Enemy {
             this.sprite.setRegion(value);
         }, 0, idleAnimation.getAnimationDuration(), 0, 999);
         Constants.textureAnimScheduler.play(id + "Idle", idleAnimSpec);
+        averageColor = computeAvarageColor(idleAnimationFrames[0]);
+    }
+
+    public Color computeAvarageColor(TextureRegion firstFrame) {
+        TextureData data = firstFrame.getTexture().getTextureData();
+        if (!data.isPrepared())
+            data.prepare();
+
+        Pixmap pixelMap = data.consumePixmap();
+        long rSum = 0, gSum = 0, bSum = 0, visiblePixelCount = 0;
+        for (int x = firstFrame.getRegionX(); x < firstFrame.getRegionX()
+                + firstFrame.getRegionWidth(); x++)
+            for (int y = firstFrame.getRegionY(); y < firstFrame.getRegionY()
+                    + firstFrame.getRegionHeight(); y++) {
+                int pixel = pixelMap.getPixel(x, y);
+
+                int alpha = pixel & 0xFF;
+                if (alpha < 10)
+                    continue;
+
+                rSum += (pixel >> 24) & 0xFF;
+                gSum += (pixel >> 16) & 0xFF;
+                bSum += (pixel >> 8) & 0xFF;
+                visiblePixelCount++;
+            }
+
+        pixelMap.dispose();
+
+        if (visiblePixelCount == 0)
+            return Color.WHITE;
+
+        return new Color((float) rSum / visiblePixelCount / 255,
+                (float) gSum / visiblePixelCount / 255, (float) bSum / visiblePixelCount / 255, 1);
     }
 
     public void initializeShootAnimation(TextureRegion[] shootAnimationFrames) {
@@ -189,7 +230,14 @@ public abstract class Enemy {
     }
 
     public void draw() {
-        sprite.draw(batch);
+        if (takeDamageTimer != 0)
+            sprite.draw(batch);
+        else {
+            batch.setShader(hitFlashShader);
+
+            sprite.draw(batch);
+            batch.setShader(null);
+        }
     }
 
     public void drawDebug() {
@@ -298,6 +346,10 @@ public abstract class Enemy {
             }
             takeDamageTimer = 0;
         }
+    }
+
+    public void dispose() {
+        hitFlashShader.dispose();
     }
 
     public boolean getIsDead() {
