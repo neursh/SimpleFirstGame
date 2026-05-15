@@ -12,8 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.gucksus.simplefirstgame.tools.BoxWithOffset;
 
 /**
- * <b>YOU HAVE TO DECLARE THESE VARIABLE IN SUBCLASSES:</b> <i>movingType,
- * isCircle, circleHitBox
+ * <b>YOU HAVE TO DECLARE THESE VARIABLE IN SUBCLASSES:</b> <i>movingType, isCircle, circleHitBox
  * <b>OR</b> rectangleHitbox, speed.</i>
  */
 public class Bullet {
@@ -200,5 +199,5 @@ public class Bullet {
         return new Vector2(sprite.getX() + width / 2, sprite.getY() + height / 2);
     }
 
-    public void playAnimation(){}
+    public void playAnimation() {}
 }
