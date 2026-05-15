@@ -2,6 +2,7 @@ package io.github.gucksus.simplefirstgame.entities.base;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import io.github.gucksus.simplefirstgame.Constants;
 import io.github.gucksus.simplefirstgame.entities.MainShip;
@@ -24,6 +25,10 @@ public abstract class Level {
     public SpriteBatch batch;
     protected BulletHolder bulletHolder;
 
+    String vertexShader = Gdx.files.internal("Shader/defaultVertex.vert").readString();
+    String fragmentShader = Gdx.files.internal("Shader/hitFlashFragment.frag").readString();
+    ShaderProgram hitFlashShader = new ShaderProgram(vertexShader, fragmentShader);
+
     public Level(BulletHolder bulletHolder, MainShip mainShip) {
         lastDelta = 67;
         this.worldWidth = Constants.worldWidth;
@@ -39,9 +44,19 @@ public abstract class Level {
     public abstract void enemySpawnDebug();
 
     void drawEnemy() {
+        batch.setShader(hitFlashShader);
         for (Enemy enemy : activeEnemies)
             if (!enemy.isInvisible) {
-                enemy.draw();
+                if (enemy.getTakeDamageTimer() == 0) {
+                    enemy.draw();
+                }
+            }
+        batch.setShader(null);
+        for (Enemy enemy : activeEnemies)
+            if (!enemy.isInvisible) {
+                if (enemy.getTakeDamageTimer() != 0) {
+                    enemy.draw();
+                }
             }
     }
 
@@ -83,5 +98,9 @@ public abstract class Level {
 
     public void updateDelta() {
         lastDelta = Gdx.graphics.getDeltaTime();
+    }
+
+    public void dispose() {
+        hitFlashShader.dispose();
     }
 }

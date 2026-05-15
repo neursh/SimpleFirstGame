@@ -116,7 +116,9 @@ public class Level1 extends Level {
         addCarrier();
     }
 
+    @Override
     public void dispose() {
+        super.dispose();
         skullAnimationSheet.dispose();
         skullBulletTexture.dispose();
     }
